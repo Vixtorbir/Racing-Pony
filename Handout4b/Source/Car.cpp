@@ -72,7 +72,7 @@ bool Car::CleanUp()
 
 void Car::Accelerate()
 {
-    const float maxSpeed = 11.5f;
+    const float maxSpeed = 8.5f;
     const float accelerationRate = 0.9f;
 
     currentAcceleration += accelerationRate;
@@ -111,17 +111,27 @@ void Car::Brake()
 
 void Car::Turn(float direction, bool isTurning)
 {
-    const float maxAngularVelocity = 3.5f;
-    const float angularFriction = 0.2f;
+    const float maxAngularVelocity = 3.5f;  
+    const float angularFriction = 0.2f;     
 
     if (isTurning)
     {
         body->body->SetAngularVelocity(maxAngularVelocity * direction);
+
+        b2Vec2 currentVelocity = body->body->GetLinearVelocity();
+        float speed = currentVelocity.Length();
+
+        if (speed > 0.01f) 
+        {
+            b2Vec2 newDirection = b2Vec2(cosf(body->GetRotation()), sinf(body->GetRotation()));
+            b2Vec2 newVelocity = b2Vec2(newDirection.x * speed, newDirection.y * speed);
+
+            body->body->SetLinearVelocity(newVelocity);
+        }
     }
     else
     {
         float angularVelocity = body->body->GetAngularVelocity();
-
         angularVelocity -= angularVelocity * angularFriction;
 
         if (fabs(angularVelocity) < 0.01f)

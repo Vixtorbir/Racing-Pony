@@ -30,7 +30,7 @@ public:
     bool nitroActive = false;       
     float nitroTimeLeft = 0.0f;    
 
-    const float nitroFactor = 15.0f; 
+    const float nitroFactor = 7.0f; 
     const float nitroDuration = 1.0f;
 
     const float nitroCooldown = 5.0f; 

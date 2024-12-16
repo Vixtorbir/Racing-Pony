@@ -73,12 +73,12 @@ update_status ModuleGame::Update()
         WHITE);
 
     
-    if (IsKeyDown(KEY_UP))
+    if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
     {
         car1->Accelerate();
     }
 
-    if (IsKeyDown(KEY_DOWN))
+	if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S))
     {
         car1->Brake();
     }
@@ -88,11 +88,11 @@ update_status ModuleGame::Update()
 		car1->Nitro();
 	}
 
-    if (IsKeyDown(KEY_LEFT))
+	if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
     {
         car1->Turn(-1, true);
     }
-    else if (IsKeyDown(KEY_RIGHT))
+	else if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
     {
         car1->Turn(1, true);
     }
