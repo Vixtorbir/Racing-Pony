@@ -20,8 +20,19 @@ public:
     void Accelerate();
     void Brake();
     void Turn(float direction, bool turn);
+	void Nitro();
 
 public:
     Texture2D texture;
+
 	float currentAcceleration;
+
+    bool nitroActive = false;       
+    float nitroTimeLeft = 0.0f;    
+
+    const float nitroFactor = 15.0f; 
+    const float nitroDuration = 1.0f;
+
+    const float nitroCooldown = 5.0f; 
+    float nitroCooldownTimeLeft = 0.0f;
 };

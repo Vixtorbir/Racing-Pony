@@ -44,7 +44,7 @@ bool ModuleGame::CleanUp()
 
 update_status ModuleGame::Update()
 {
-    if (IsKeyPressed(KEY_SPACE))
+    if (IsKeyPressed(KEY_R))
     {
         ray_on = !ray_on;
         ray.x = GetMouseX();
@@ -82,6 +82,11 @@ update_status ModuleGame::Update()
     {
         car1->Brake();
     }
+
+	if (IsKeyDown(KEY_SPACE))
+	{
+		car1->Nitro();
+	}
 
     if (IsKeyDown(KEY_LEFT))
     {
