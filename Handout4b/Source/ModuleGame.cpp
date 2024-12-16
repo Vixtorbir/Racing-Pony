@@ -5,6 +5,7 @@
 #include "ModuleAudio.h"
 #include "ModulePhysics.h"
 #include "Car.h"
+#include "Map.h" 
 
 ModuleGame::ModuleGame(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -51,6 +52,7 @@ update_status ModuleGame::Update()
         ray.y = GetMouseY();
     }
 
+    App->map->Update();
    
     car1->Update();
 
