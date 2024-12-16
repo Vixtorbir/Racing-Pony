@@ -26,7 +26,7 @@ void Car::Update()
         
         float mass = body->body->GetMass();
         float N = mass * 9.8f; 
-        float dynamicFrictionCoeff = 0.2f;
+        float dynamicFrictionCoeff = 0.2f; 
         float frictionMagnitude = N * dynamicFrictionCoeff;
 
         b2Vec2 friction = b2Vec2(-dir.x * frictionMagnitude, -dir.y * frictionMagnitude);
@@ -38,6 +38,18 @@ void Car::Update()
         }
         body->body->SetLinearVelocity(newVelocity);
     }
+
+    float angularVelocity = body->body->GetAngularVelocity();
+    if (fabs(angularVelocity) > 0.001f) {
+        float angularFriction = 0.1f; 
+        float newAngularVelocity = angularVelocity - angularFriction * angularVelocity * (1.0f / 60.0f);
+
+        if (fabs(newAngularVelocity) < 0.001f) {
+            newAngularVelocity = 0.0f;
+        }
+
+        body->body->SetAngularVelocity(newAngularVelocity);
+    }
 }
 
 bool Car::CleanUp()
@@ -47,8 +59,8 @@ bool Car::CleanUp()
 
 void Car::Accelerate()
 {
-    const float maxSpeed = 10.0f;
-    const float accelerationRate = 0.2f;
+    const float maxSpeed = 11.5f;
+    const float accelerationRate = 0.9f;
 
     currentAcceleration += accelerationRate;
     if (currentAcceleration > maxSpeed) {
@@ -66,18 +78,43 @@ void Car::Brake()
     b2Vec2 velocity = body->body->GetLinearVelocity();
     const float brakingRate = 0.5f;
 
+   
     b2Vec2 braking = b2Vec2(-velocity.x * brakingRate, -velocity.y * brakingRate);
     b2Vec2 newVelocity = b2Vec2(velocity.x + braking.x, velocity.y + braking.y);
 
     if (newVelocity.Length() < 0.1f) {
-        newVelocity.SetZero();
+        
+        float reverseSpeed = -2.0f;
+        b2Vec2 reverseDirection = b2Vec2(-cosf(body->GetRotation()), -sinf(body->GetRotation()));
+        newVelocity = b2Vec2(reverseDirection.x * reverseSpeed, reverseDirection.y * reverseSpeed);
     }
 
     body->body->SetLinearVelocity(newVelocity);
 }
 
-void Car::Turn(float direction)
+void Car::Turn(float direction, bool isTurning)
 {
-    const float maxAngularVelocity = 3.0f;
-    body->body->SetAngularVelocity(maxAngularVelocity * direction);
+    const float maxAngularVelocity = 3.5f; 
+    const float angularFriction = 0.2f;    
+
+    if (isTurning)
+    {
+        body->body->SetAngularVelocity(maxAngularVelocity * direction);
+    }
+    else
+    {
+        float angularVelocity = body->body->GetAngularVelocity();
+
+        angularVelocity -= angularVelocity * angularFriction;
+
+        if (fabs(angularVelocity) < 0.01f)
+        {
+            angularVelocity = 0.0f;
+        }
+
+        body->body->SetAngularVelocity(angularVelocity);
+    }
 }
+
+
+

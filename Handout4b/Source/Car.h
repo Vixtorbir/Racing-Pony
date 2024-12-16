@@ -19,9 +19,9 @@ public:
 
     void Accelerate();
     void Brake();
-    void Turn(float direction);
+    void Turn(float direction, bool turn);
 
-private:
+public:
     Texture2D texture;
 	float currentAcceleration;
 };

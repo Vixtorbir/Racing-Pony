@@ -4,12 +4,11 @@
 #include "ModuleGame.h"
 #include "ModuleAudio.h"
 #include "ModulePhysics.h"
-
-
+#include "Car.h"
 
 ModuleGame::ModuleGame(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	ray_on = false;
+    ray_on = false;
 }
 
 ModuleGame::~ModuleGame()
@@ -18,101 +17,89 @@ ModuleGame::~ModuleGame()
 // Load assets
 bool ModuleGame::Start()
 {
-	LOG("Loading Intro assets");
-	bool ret = true;
+    LOG("Loading Game assets");
+    bool ret = true;
 
-	App->renderer->camera.x = App->renderer->camera.y = 0;
+    App->renderer->camera.x = App->renderer->camera.y = 0;
 
-	
-	car1 = new Car(App->physics, 100, 100, this);
+    car1 = new Car(App->physics, 100, 100, this);
 
-
-	return ret;
+    return ret;
 }
 
 // Load assets
 bool ModuleGame::CleanUp()
 {
-	LOG("Unloading Intro scene");
+    LOG("Unloading Game scene");
 
-	return true;
+    if (car1 != nullptr)
+    {
+        delete car1;
+        car1 = nullptr;
+    }
+
+    return true;
 }
 
-// Update: draw background
+
 update_status ModuleGame::Update()
 {
-	if(IsKeyPressed(KEY_SPACE))
-	{
-		ray_on = !ray_on;
-		ray.x = GetMouseX();
-		ray.y = GetMouseY();
-	}
+    if (IsKeyPressed(KEY_SPACE))
+    {
+        ray_on = !ray_on;
+        ray.x = GetMouseX();
+        ray.y = GetMouseY();
+    }
 
-	// Prepare for raycast ------------------------------------------------------
-	
-	vec2i mouse;
-	mouse.x = GetMouseX();
-	mouse.y = GetMouseY();
-	int ray_hit = ray.DistanceTo(mouse);
+   
+    car1->Update();
 
-	vec2f normal(0.0f, 0.0f);
+    
+    int carX, carY;
+    car1->body->GetPhysicPosition(carX, carY);
 
-	// All draw functions ------------------------------------------------------
+    
+    carX -= car1->texture.width / 2;
+    carY -= car1->texture.height / 2;
 
+    float rotation = car1->body->GetRotation() * RAD2DEG; 
 
-	for (PhysicEntity* entity : entities)
-	{
-		entity->Update();
-		if (ray_on)
-		{
-			int hit = entity->RayHit(ray, mouse, normal);
-			if (hit >= 0)
-			{
-				ray_hit = hit;
-			}
-		}
-	}
-	
+    DrawTexturePro(car1->texture,
+        Rectangle{ 0, 0, (float)car1->texture.width, (float)car1->texture.height }, 
+        Rectangle{ (float)carX + car1->texture.width / 2, (float)carY + car1->texture.height / 2,
+                   (float)car1->texture.width, (float)car1->texture.height }, 
+        Vector2{ (float)car1->texture.width / 2, (float)car1->texture.height / 2 },
+        rotation, 
+        WHITE);
 
-	// ray -----------------
-	if(ray_on == true)
-	{
-		vec2f destination((float)(mouse.x-ray.x), (float)(mouse.y-ray.y));
-		destination.Normalize();
-		destination *= (float)ray_hit;
+    
+    if (IsKeyDown(KEY_UP))
+    {
+        car1->Accelerate();
+    }
 
-		DrawLine(ray.x, ray.y, (int)(ray.x + destination.x), (int)(ray.y + destination.y), RED);
+    if (IsKeyDown(KEY_DOWN))
+    {
+        car1->Brake();
+    }
 
-		if (normal.x != 0.0f)
-		{
-			DrawLine((int)(ray.x + destination.x), (int)(ray.y + destination.y), (int)(ray.x + destination.x + normal.x * 25.0f), (int)(ray.y + destination.y + normal.y * 25.0f), Color{ 100, 255, 100, 255 });
-		}
-	}
+    if (IsKeyDown(KEY_LEFT))
+    {
+        car1->Turn(-1, true);
+    }
+    else if (IsKeyDown(KEY_RIGHT))
+    {
+        car1->Turn(1, true);
+    }
+    else
+    {
+        car1->Turn(0, false); 
+    }
 
-	if (IsKeyDown(KEY_UP))
-	{
-		car1->Accelerate();
-	}
-
-	if (IsKeyDown(KEY_DOWN))
-	{
-		car1->Brake();
-	}
-
-	if (IsKeyDown(KEY_LEFT))
-	{
-		car1->Turn(-1);
-	}
-
-	if (IsKeyDown(KEY_RIGHT))
-	{
-		car1->Turn(1);
-	}
-
-	return UPDATE_CONTINUE;
+    return UPDATE_CONTINUE;
 }
+
 
 void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
-	
 }
