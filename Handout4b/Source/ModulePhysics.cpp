@@ -99,7 +99,7 @@ PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius)
 	return pbody;
 }
 
-PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height, uint16 category, uint16 mask, int16 groupIndex)
+PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height)
 {
 	PhysBody* pbody = new PhysBody();
 
@@ -115,14 +115,6 @@ PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height, ui
 	b2FixtureDef fixture;
 	fixture.shape = &box;
 	fixture.density = 1.0f;
-	// TODO 2: Add filter categoryBits and maskBits to fixture
-
-	fixture.filter.categoryBits = category;
-	fixture.filter.maskBits = mask;
-
-	// TODO 5: Add groupIndex filter to fixture. Set default value to 0
-
-	fixture.filter.groupIndex = groupIndex;
 
 
 	b->CreateFixture(&fixture);

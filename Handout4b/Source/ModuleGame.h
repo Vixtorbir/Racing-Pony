@@ -2,6 +2,7 @@
 
 #include "Globals.h"
 #include "Module.h"
+#include "Car.h"
 
 #include "p2Point.h"
 
@@ -27,10 +28,8 @@ public:
 
 	std::vector<PhysicEntity*> entities;
 	
-	Texture2D plane;
-	Texture2D car;
-	Texture2D ship;
-	Texture2D bike;
+	Car* car1;
+	
 
 	vec2<int> ray;
 	bool ray_on;
