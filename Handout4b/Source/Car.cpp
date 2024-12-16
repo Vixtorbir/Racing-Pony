@@ -23,9 +23,9 @@ void Car::Update()
     if (speed > 0.001f) {
         dir.Normalize();
 
-        // Cálculo de fricción dinámica
+   
         float mass = body->body->GetMass();
-        float N = mass * 9.8f; // Fuerza normal
+        float N = mass * 9.8f; 
         float dynamicFrictionCoeff = 0.2f;
         float frictionMagnitude = N * dynamicFrictionCoeff;
 
@@ -39,20 +39,18 @@ void Car::Update()
         body->body->SetLinearVelocity(newVelocity);
     }
 
-    // Si el nitro está activo, disminuir el tiempo restante
+    
     if (nitroActive) {
-        nitroTimeLeft -= (1.0f / 60.0f);  // Reducir el tiempo restante en cada actualización (suponiendo 60 FPS)
+        nitroTimeLeft -= (1.0f / 60.0f);  
         if (nitroTimeLeft <= 0.0f) {
-            nitroActive = false; // Desactivar el nitro cuando el tiempo se agote
+            nitroActive = false; 
         }
     }
 
-    // Descontar el tiempo de cooldown para el nitro
     if (nitroCooldownTimeLeft > 0.0f) {
-        nitroCooldownTimeLeft -= (1.0f / 60.0f);  // Reducir el tiempo de cooldown (suponiendo 60 FPS)
+        nitroCooldownTimeLeft -= (1.0f / 60.0f);  
     }
 
-    // Control de fricción y velocidad angular
     float angularVelocity = body->body->GetAngularVelocity();
     if (fabs(angularVelocity) > 0.001f) {
         float angularFriction = 0.1f;
