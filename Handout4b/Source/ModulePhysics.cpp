@@ -154,7 +154,7 @@ PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int heig
 	return pbody;
 }
 
-PhysBody* ModulePhysics::CreateChain(int x, int y, const int* points, int size)
+PhysBody* ModulePhysics::CreateChain(int x, int y, const int* points, int size, ColliderType type_)
 {
 	PhysBody* pbody = new PhysBody();
 
@@ -185,6 +185,7 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, const int* points, int size)
 
 	pbody->body = b;
 	pbody->width = pbody->height = 0;
+	pbody->colliderType = type_;
 
 	return pbody;
 }

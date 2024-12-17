@@ -70,7 +70,7 @@ void Map::CreateBorders()
     
     if (points.size() >= 4) 
     {
-        PhysBody* border = App->physics->CreateChain(0, 0, points.data(), points.size());
+		PhysBody* border = App->physics->CreateChain(0, 0, points.data(), points.size(), ColliderType::WALL);
 
         if (border != nullptr)
         {

@@ -22,6 +22,8 @@ public:
     void Turn(float direction, bool turn);
 	void Nitro();
 
+  
+
 public:
     Texture2D texture;
 
@@ -35,4 +37,6 @@ public:
 
     const float nitroCooldown = 5.0f; 
     float nitroCooldownTimeLeft = 0.0f;
+
+	
 };

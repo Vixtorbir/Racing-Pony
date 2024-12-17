@@ -23,10 +23,13 @@ bool ModuleGame::Start()
 
     App->renderer->camera.x = App->renderer->camera.y = 0;
 
+    // Crear coche
     car1 = new Car(App->physics, 100, 100, this);
+
 
     return ret;
 }
+
 
 // Load assets
 bool ModuleGame::CleanUp()
@@ -39,8 +42,15 @@ bool ModuleGame::CleanUp()
         car1 = nullptr;
     }
 
+    if (App->map != nullptr)
+    {
+        delete App->map;
+        App->map = nullptr;
+    }
+
     return true;
 }
+
 
 
 update_status ModuleGame::Update()
@@ -109,4 +119,7 @@ update_status ModuleGame::Update()
 
 void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
+		
+	LOG("Collision detected");
+
 }

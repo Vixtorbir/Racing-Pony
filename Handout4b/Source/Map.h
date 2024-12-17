@@ -10,8 +10,6 @@
 #include <utility>
 
 
-//Crea una clase mapa que que carge la textura del mapa y la dibuje, ademas de crear vector<PhysBody*> para los bordes del mapa (utiliza la función createChain de ModulePhysics)
-
 class Map : public Module
 {
 public:
