@@ -27,7 +27,7 @@ enum class ColliderType {
 class PhysBody
 {
 public:
-	PhysBody() : width(0), height(0), listener(NULL), body(NULL), colliderType(ColliderType::NONE)
+	PhysBody() : width(0), height(0), listener(NULL), body(NULL), colliderType(ColliderType::NONE), entity(nullptr)
 	{
 	}
 
@@ -42,6 +42,7 @@ public:
 	b2Body* body;
 	Module* listener;
 	ColliderType colliderType;
+	void* entity;
 };
 
 // Module --------------------------------------

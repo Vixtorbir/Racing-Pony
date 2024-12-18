@@ -34,6 +34,15 @@
     <ClCompile Include="Source\Map.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Boost.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MapItem.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\OilSlick.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source/p2Point.h">
@@ -73,6 +82,15 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Source\Map.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Boost.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MapItem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\OilSlick.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

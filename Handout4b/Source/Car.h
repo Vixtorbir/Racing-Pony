@@ -21,6 +21,7 @@ public:
     void Brake();
     void Turn(float direction, bool turn);
 	void Nitro();
+    void ApplyBoost(float boostFactor);
 
   
 

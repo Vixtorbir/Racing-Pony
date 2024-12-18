@@ -103,19 +103,20 @@ void Car::Brake()
     b2Vec2 velocity = body->body->GetLinearVelocity();
     const float brakingRate = 0.5f;
 
+    // Aplicar frenado gradual
     b2Vec2 braking = b2Vec2(-velocity.x * brakingRate, -velocity.y * brakingRate);
     b2Vec2 newVelocity = b2Vec2(velocity.x + braking.x, velocity.y + braking.y);
 
-    if (newVelocity.Length() < 0.1f) {
-
-        float reverseSpeed = -2.0f;
-        // Adjusted reverse direction to point upwards
-        b2Vec2 reverseDirection = b2Vec2(-sinf(body->GetRotation()), cosf(body->GetRotation()));
-        newVelocity = b2Vec2(reverseDirection.x * reverseSpeed, reverseDirection.y * reverseSpeed);
+    // Si la velocidad es muy baja, detener el coche completamente
+    if (newVelocity.Length() < 0.1f)
+    {
+        newVelocity.SetZero();
     }
 
+    // Actualizar la velocidad del coche
     body->body->SetLinearVelocity(newVelocity);
 }
+
 
 void Car::Turn(float direction, bool isTurning)
 {
@@ -159,7 +160,6 @@ void Car::Nitro()
         nitroActive = true;
         nitroTimeLeft = nitroDuration;
 
-        // Adjusted nitro boost direction to upwards
         b2Vec2 direction = b2Vec2(sinf(body->GetRotation()), -cosf(body->GetRotation()));
         b2Vec2 currentVelocity = body->body->GetLinearVelocity();
         b2Vec2 nitroBoost = b2Vec2(direction.x * nitroFactor, direction.y * nitroFactor);
@@ -168,4 +168,14 @@ void Car::Nitro()
 
         nitroCooldownTimeLeft = nitroCooldown;
     }
+}
+
+void Car::ApplyBoost(float boostFactor)
+{
+    b2Vec2 direction = b2Vec2(sinf(body->GetRotation()), -cosf(body->GetRotation()));
+    b2Vec2 currentVelocity = body->body->GetLinearVelocity();
+
+    b2Vec2 boost = b2Vec2(direction.x * boostFactor, direction.y * boostFactor);
+    body->body->SetLinearVelocity(currentVelocity + boost);
+
 }

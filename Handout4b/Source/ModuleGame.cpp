@@ -26,6 +26,10 @@ bool ModuleGame::Start()
     // Crear coche
     car1 = new Car(App->physics, 100, 100, this);
 
+    nitro = new Nitro(App->physics->CreateCircle(200, 300, 40), LoadTexture("Assets/Car.png"),this);
+
+	oil = new OilSlick(App->physics->CreateRectangleSensor(400, 500, 30, 10), LoadTexture("Assets/Car.png"), this);
+
 
     return ret;
 }
@@ -40,12 +44,6 @@ bool ModuleGame::CleanUp()
     {
         delete car1;
         car1 = nullptr;
-    }
-
-    if (App->map != nullptr)
-    {
-        delete App->map;
-        App->map = nullptr;
     }
 
     return true;
@@ -63,6 +61,10 @@ update_status ModuleGame::Update()
     }
 
     App->map->Update();
+
+    nitro->Draw();
+    oil->Draw();
+
    
     car1->Update();
 
@@ -119,7 +121,26 @@ update_status ModuleGame::Update()
 
 void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
-		
-	LOG("Collision detected");
-
+    if (bodyA != nullptr && bodyB != nullptr)
+    {
+        if (bodyB->colliderType == ColliderType::NITRO)
+        {
+            Nitro* nitro = static_cast<Nitro*>(bodyB->entity);
+            if (nitro && !nitro->isCollected()) 
+            {
+                nitro->OnPlayerCollision();
+                car1->ApplyBoost(15.0f); 
+            }
+        }
+        else if (bodyB->colliderType == ColliderType::OIL)
+        {
+            OilSlick* oil = static_cast<OilSlick*>(bodyB->entity);
+            if (oil)
+            {
+                oil->OnPlayerCollision();
+            }
+        }
+    }
 }
+
+

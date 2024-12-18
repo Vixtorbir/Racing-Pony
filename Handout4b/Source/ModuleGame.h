@@ -3,6 +3,8 @@
 #include "Globals.h"
 #include "Module.h"
 #include "Car.h"
+#include "Boost.h"
+#include "OilSlick.h"
 
 #include "p2Point.h"
 
@@ -29,6 +31,8 @@ public:
 	std::vector<PhysicEntity*> entities;
 	
 	Car* car1;
+	Nitro* nitro;
+	OilSlick* oil;
 	
 
 	vec2<int> ray;
