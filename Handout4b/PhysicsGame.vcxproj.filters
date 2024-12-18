@@ -43,6 +43,9 @@
     <ClCompile Include="Source\OilSlick.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ModuleParticle.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source/p2Point.h">
@@ -91,6 +94,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Source\OilSlick.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ModuleParticle.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

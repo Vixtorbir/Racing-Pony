@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "Timer.h"
 #include <vector>
+#include "ModuleParticle.h"
 
 class Module;
 class ModuleWindow;
@@ -11,6 +12,7 @@ class ModuleAudio;
 class ModulePhysics;
 class ModuleGame;
 class Map;
+class ModuleParticle;
 
 class Application
 {
@@ -22,6 +24,7 @@ public:
 	ModulePhysics* physics;
 	ModuleGame* scene_intro;
 	Map* map;
+	ModuleParticle* particleSystem;
 
 private:
 

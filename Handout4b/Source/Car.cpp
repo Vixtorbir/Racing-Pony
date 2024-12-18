@@ -4,7 +4,6 @@ Car::Car(ModulePhysics* physics, int _x, int _y, Module* _listener)
     : PhysicEntity(physics->CreateRectangle(_x, _y, 26, 43), _listener)
 {
     texture = LoadTexture("Assets/Car.png");
-    //Haz que aparezca mirando hacia la derecha
     body->body->SetTransform(body->body->GetPosition(), b2_pi / 2);
     body->colliderType = ColliderType::CAR;
     listener = _listener;
@@ -113,7 +112,7 @@ bool Car::CleanUp()
 
 void Car::Accelerate()
 {
-    if (isSpinning) return; // No hacer nada si está derrapando
+    if (isSpinning) return; 
 
     const float maxSpeed = 8.5f;
     const float accelerationRate = 0.9f;
@@ -123,14 +122,14 @@ void Car::Accelerate()
         currentAcceleration = maxSpeed;
     }
 
-    // Dirección según la rotación actual del coche
+    
     b2Vec2 direction = b2Vec2(sinf(body->GetRotation()), -cosf(body->GetRotation()));
 
     direction.Normalize();
 
     b2Vec2 newVelocity = b2Vec2(direction.x * currentAcceleration, direction.y * currentAcceleration);
 
-    if (nitroActive) // Aplicar nitro si está activo
+    if (nitroActive) 
     {
         newVelocity += b2Vec2(direction.x * nitroFactor, direction.y * nitroFactor);
     }
@@ -148,17 +147,14 @@ void Car::Brake()
     b2Vec2 velocity = body->body->GetLinearVelocity();
     const float brakingRate = 0.5f;
 
-    // Aplicar frenado gradual
     b2Vec2 braking = b2Vec2(-velocity.x * brakingRate, -velocity.y * brakingRate);
     b2Vec2 newVelocity = b2Vec2(velocity.x + braking.x, velocity.y + braking.y);
 
-    // Si la velocidad es muy baja, detener el coche completamente
     if (newVelocity.Length() < 0.1f)
     {
         newVelocity.SetZero();
     }
 
-    // Actualizar la velocidad del coche
     body->body->SetLinearVelocity(newVelocity);
 }
 
@@ -179,7 +175,6 @@ void Car::Turn(float direction, bool isTurning)
 
         if (speed > 0.01f)
         {
-            // Adjusted direction alignment for upward movement
             b2Vec2 newDirection = b2Vec2(sinf(body->GetRotation()), -cosf(body->GetRotation()));
             b2Vec2 newVelocity = b2Vec2(newDirection.x * speed, newDirection.y * speed);
 
@@ -219,12 +214,19 @@ void Car::Nitro()
     }
 }
 
-void Car::ApplyBoost(float boostFactor)
-{
+void Car::ApplyBoost(float boostFactor) {
+
     b2Vec2 direction = b2Vec2(sinf(body->GetRotation()), -cosf(body->GetRotation()));
-    b2Vec2 currentVelocity = body->body->GetLinearVelocity();
+    direction.Normalize();
 
-    b2Vec2 boost = b2Vec2(direction.x * boostFactor, direction.y * boostFactor);
-    body->body->SetLinearVelocity(currentVelocity + boost);
+	b2Vec2 boost = b2Vec2(direction.x * boostFactor, direction.y * boostFactor);
 
+    body->body->SetLinearVelocity(boost);
+
+	Vector2 position = {
+		body->body->GetPosition().x * PIXELS_PER_METER,
+		body->body->GetPosition().y * PIXELS_PER_METER
+	};
+   
 }
+

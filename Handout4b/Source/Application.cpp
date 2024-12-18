@@ -17,16 +17,22 @@ Application::Application()
 	physics = new ModulePhysics(this);
 	scene_intro = new ModuleGame(this);
 	map = new Map(this);
+	particleSystem = new ModuleParticle(this);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
 
 	// Main Modules
+	
 	AddModule(window);
 	AddModule(physics);
 	AddModule(audio);
+	
 	AddModule(map);
+
+	AddModule(particleSystem);
+	
 	
 	// Scenes
 	AddModule(scene_intro);

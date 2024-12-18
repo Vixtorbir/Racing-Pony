@@ -60,17 +60,19 @@ update_status ModuleGame::Update()
         ray.y = GetMouseY();
     }
 
-    //Renderizar Mapa
+    
     App->map->Update();
 
-    //Renderizar objetos del mapa
+    
     nitro->Draw();
     oil->Draw();
 
-	//Renderizar coche
+	
     car1->Update();
 
-    
+    App->particleSystem->Update();
+
+
     int carX, carY;
     car1->body->GetPhysicPosition(carX, carY);
 
@@ -120,7 +122,7 @@ update_status ModuleGame::Update()
     if (car1->isSpinning) {
         float progress = car1->spinningTimeLeft / car1->spinningDuration;
 
-        DrawRectangle(10, 10, 200 * progress, 20, RED); // Barra de derrape
+        DrawRectangle(10, 10, 200 * progress, 20, RED); 
         DrawText("Derrapando!", 10, 40, 20, WHITE);
     }
 
@@ -137,17 +139,27 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
             Nitro* nitro = static_cast<Nitro*>(bodyB->entity);
             if (nitro && !nitro->isCollected()) 
             {
+                b2Vec2 carPosition = car1->body->body->GetPosition();
+                Vector2 position = {
+                    carPosition.x * PIXELS_PER_METER,
+                    carPosition.y * PIXELS_PER_METER
+                };
+                App->particleSystem->SpawnParticles(position, ParticleType::NITRO);
                 nitro->OnPlayerCollision();
                 car1->ApplyBoost(15.0f); 
             }
         }
         if (bodyB->colliderType == ColliderType::OIL) {
             if (oil && car1 && !car1->oilCooldownActive) {
-
                 oil->OnPlayerCollision();
 
-                
-               // App->particleSystem->SpawnParticles(car1->GetPosition(), ParticleType::SMOKE); 
+                b2Vec2 carPosition = car1->body->body->GetPosition();
+                Vector2 position = {
+                    carPosition.x * PIXELS_PER_METER,
+                    carPosition.y * PIXELS_PER_METER
+                };
+
+                App->particleSystem->SpawnParticles(position, ParticleType::SMOKE);
 
                 car1->isSpinning = true;
                 car1->spinningTimeLeft = car1->spinningDuration;
@@ -166,7 +178,6 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
                 car1->oilCooldownTimeLeft = car1->oilCooldownDuration;
             }
         }
+
     }
 }
-
-
