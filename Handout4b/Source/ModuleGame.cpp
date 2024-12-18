@@ -26,9 +26,9 @@ bool ModuleGame::Start()
     // Crear coche
     car1 = new Car(App->physics, 100, 100, this);
 
-    nitro = new Nitro(App->physics->CreateCircle(200, 300, 40), LoadTexture("Assets/Car.png"),this);
+    nitro = new Nitro(App->physics->CreateRectangleSensor(200, 300, 60,40), LoadTexture("Assets/Car.png"),this);
 
-	oil = new OilSlick(App->physics->CreateRectangleSensor(400, 500, 30, 10), LoadTexture("Assets/Car.png"), this);
+	oil = new OilSlick(App->physics->CreateCircleSensor(400, 500, 20), LoadTexture("Assets/Car.png"), this);
 
 
     return ret;
@@ -60,12 +60,14 @@ update_status ModuleGame::Update()
         ray.y = GetMouseY();
     }
 
+    //Renderizar Mapa
     App->map->Update();
 
+    //Renderizar objetos del mapa
     nitro->Draw();
     oil->Draw();
 
-   
+	//Renderizar coche
     car1->Update();
 
     
@@ -115,6 +117,13 @@ update_status ModuleGame::Update()
         car1->Turn(0, false); 
     }
 
+    if (car1->isSpinning) {
+        float progress = car1->spinningTimeLeft / car1->spinningDuration;
+
+        DrawRectangle(10, 10, 200 * progress, 20, RED); // Barra de derrape
+        DrawText("Derrapando!", 10, 40, 20, WHITE);
+    }
+
     return UPDATE_CONTINUE;
 }
 
@@ -132,12 +141,29 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
                 car1->ApplyBoost(15.0f); 
             }
         }
-        else if (bodyB->colliderType == ColliderType::OIL)
-        {
-            OilSlick* oil = static_cast<OilSlick*>(bodyB->entity);
-            if (oil)
-            {
+        if (bodyB->colliderType == ColliderType::OIL) {
+            if (oil && car1 && !car1->oilCooldownActive) {
+
                 oil->OnPlayerCollision();
+
+                
+               // App->particleSystem->SpawnParticles(car1->GetPosition(), ParticleType::SMOKE); 
+
+                car1->isSpinning = true;
+                car1->spinningTimeLeft = car1->spinningDuration;
+
+                b2Vec2 velocity = car1->body->body->GetLinearVelocity();
+                if (velocity.Length() > 0.0f) {
+                    car1->preSpinDirection = velocity;
+                    car1->preSpinDirection.Normalize();
+                }
+                else {
+                    car1->preSpinDirection.SetZero();
+                }
+
+                car1->body->body->SetLinearVelocity(b2Vec2(0, 0));
+                car1->oilCooldownActive = true;
+                car1->oilCooldownTimeLeft = car1->oilCooldownDuration;
             }
         }
     }

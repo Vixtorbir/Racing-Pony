@@ -12,6 +12,11 @@ Car::Car(ModulePhysics* physics, int _x, int _y, Module* _listener)
     nitroActive = false;
     nitroTimeLeft = 0.0f;
     nitroCooldownTimeLeft = 0.0f;
+    isSpinning = false;
+    spinningTimeLeft = 0.0f;
+    oilCooldownActive = false;
+    oilCooldownTimeLeft = 0.0f;
+    preSpinDirection.SetZero();
 }
 
 Car::~Car()
@@ -21,6 +26,34 @@ Car::~Car()
 
 void Car::Update()
 {
+
+    if (isSpinning) {
+        spinningTimeLeft -= (1.0f / 60.0f);
+
+        float remainingFraction = spinningTimeLeft / spinningDuration;
+        float currentAngularVelocity = spinningAngularVelocity * remainingFraction;
+        body->body->SetAngularVelocity(currentAngularVelocity);
+
+        if (spinningTimeLeft <= 0.0f) {
+            isSpinning = false;
+            body->body->SetAngularVelocity(0.0f);
+
+            if (preSpinDirection.Length() > 0.0f) {
+                float angle = atan2(preSpinDirection.y, preSpinDirection.x);
+                body->body->SetTransform(body->body->GetPosition(), angle);
+            }
+        }
+    }
+
+    if (oilCooldownActive) 
+    {
+        oilCooldownTimeLeft -= (1.0f / 60.0f);
+        if (oilCooldownTimeLeft <= 0.0f)
+        {
+            oilCooldownActive = false;
+        }
+    }
+
     int x, y;
     body->GetPhysicPosition(x, y);
 
@@ -68,6 +101,8 @@ void Car::Update()
 
         body->body->SetAngularVelocity(newAngularVelocity);
     }
+
+
 }
 
 
@@ -78,6 +113,8 @@ bool Car::CleanUp()
 
 void Car::Accelerate()
 {
+    if (isSpinning) return; // No hacer nada si está derrapando
+
     const float maxSpeed = 8.5f;
     const float accelerationRate = 0.9f;
 
@@ -86,20 +123,28 @@ void Car::Accelerate()
         currentAcceleration = maxSpeed;
     }
 
-    // Adjusted direction to point upwards instead of to the right
+    // Dirección según la rotación actual del coche
     b2Vec2 direction = b2Vec2(sinf(body->GetRotation()), -cosf(body->GetRotation()));
+
+    direction.Normalize();
 
     b2Vec2 newVelocity = b2Vec2(direction.x * currentAcceleration, direction.y * currentAcceleration);
 
-    if (nitroActive) {
+    if (nitroActive) // Aplicar nitro si está activo
+    {
         newVelocity += b2Vec2(direction.x * nitroFactor, direction.y * nitroFactor);
     }
 
     body->body->SetLinearVelocity(newVelocity);
 }
 
+
+
+
 void Car::Brake()
 {
+    if (isSpinning) return;
+
     b2Vec2 velocity = body->body->GetLinearVelocity();
     const float brakingRate = 0.5f;
 
@@ -120,6 +165,8 @@ void Car::Brake()
 
 void Car::Turn(float direction, bool isTurning)
 {
+    if (isSpinning) return;
+
     const float maxAngularVelocity = 3.5f;
     const float angularFriction = 0.2f;
 
@@ -156,6 +203,8 @@ void Car::Turn(float direction, bool isTurning)
 
 void Car::Nitro()
 {
+    if (isSpinning) return;
+
     if (nitroCooldownTimeLeft <= 0.0f && !nitroActive) {
         nitroActive = true;
         nitroTimeLeft = nitroDuration;

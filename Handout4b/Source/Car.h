@@ -39,5 +39,16 @@ public:
     const float nitroCooldown = 5.0f; 
     float nitroCooldownTimeLeft = 0.0f;
 
+    bool isSpinning;              
+    float spinningTimeLeft;       
+    const float spinningDuration = 2.0f; 
+    const float spinningAngularVelocity = 5.0f;
+
+    b2Vec2 preSpinDirection;
+
+    bool oilCooldownActive;
+    float oilCooldownTimeLeft;
+    const float oilCooldownDuration = 5.0f;
+
 	
 };

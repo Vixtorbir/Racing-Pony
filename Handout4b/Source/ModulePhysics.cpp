@@ -154,6 +154,42 @@ PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int heig
 	return pbody;
 }
 
+PhysBody* ModulePhysics::CreateCircleSensor(int x, int y, int radius)
+{
+	// Crear un nuevo objeto PhysBody
+	PhysBody* pbody = new PhysBody();
+
+	// Definición del cuerpo en el mundo físico
+	b2BodyDef body;
+	body.type = b2_staticBody; // Sensor estático
+	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+	body.userData.pointer = reinterpret_cast<uintptr_t>(pbody);
+
+	// Crear el cuerpo en el mundo físico
+	b2Body* b = world->CreateBody(&body);
+
+	// Definir la forma del sensor como un círculo
+	b2CircleShape circle;
+	circle.m_radius = PIXEL_TO_METERS(radius);
+
+	// Configurar el fixture como sensor
+	b2FixtureDef fixture;
+	fixture.shape = &circle;
+	fixture.density = 1.0f;
+	fixture.isSensor = true;
+
+	// Añadir el fixture al cuerpo
+	b->CreateFixture(&fixture);
+
+	// Configurar el objeto PhysBody
+	pbody->body = b;
+	pbody->width = radius;  // Ancho igual al radio
+	pbody->height = radius; // Alto igual al radio
+
+	return pbody;
+}
+
+
 PhysBody* ModulePhysics::CreateChain(int x, int y, const int* points, int size, ColliderType type_)
 {
 	PhysBody* pbody = new PhysBody();
