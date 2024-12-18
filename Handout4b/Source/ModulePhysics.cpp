@@ -397,9 +397,19 @@ void ModulePhysics::BeginContact(b2Contact* contact)
 	PhysBody* physA = (PhysBody*)dataA.pointer;
 	PhysBody* physB = (PhysBody*)dataB.pointer;
 
-	if(physA && physA->listener != NULL)
+	if (physA == nullptr)
+	{
+		LOG("physA is NULL");
+	}
+
+	if (physB == nullptr)
+	{
+		LOG("physB is NULL");
+	}
+
+	if (physA && physA->listener != NULL)
 		physA->listener->OnCollision(physA, physB);
 
-	if(physB && physB->listener != NULL)
+	if (physB && physB->listener != NULL)
 		physB->listener->OnCollision(physB, physA);
 }

@@ -56,32 +56,38 @@ void Map::CreateBorders()
 {
     std::vector<int> points;
 
-    for (size_t i = 0; i < mapPoints.size() - 1; ++i) 
+    for (size_t i = 0; i < mapPoints.size() - 1; ++i)
     {
         points.push_back(mapPoints[i].first);
         points.push_back(mapPoints[i].second);
 
-        std::cout << "Point " << i << ": ("
-            << mapPoints[i].first << ", " << mapPoints[i].second << ")\n";
+        std::cout << "Point " << i << ": (" << mapPoints[i].first << ", " << mapPoints[i].second << ")\n";
     }
 
     std::cout << "Creating border with " << points.size() / 2 << " points.\n";
 
-    
-    if (points.size() >= 4) 
+    if (points.size() >= 4)
     {
-		PhysBody* border = App->physics->CreateChain(0, 0, points.data(), points.size(), ColliderType::WALL);
+        PhysBody* border = App->physics->CreateChain(0, 0, points.data(), points.size(), ColliderType::WALL);
 
         if (border != nullptr)
         {
+            if (border->body == nullptr || border->body->GetUserData().pointer == 0)
+            {
+                LOG("Error: PhysBody userData is not set properly.");
+            }
+
+            border->listener = this;
             mapBorders.push_back(border);
         }
+
     }
     else
     {
         std::cout << "Error: Not enough valid points to create a border.\n";
     }
 }
+
 
 
 bool Map::CleanUp()
@@ -99,6 +105,21 @@ bool Map::CleanUp()
     mapBorders.clear();
 
     return true;
+}
+
+void Map::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
+{
+	if (bodyA != nullptr && bodyB != nullptr)
+	{
+		if (bodyA->colliderType == ColliderType::CAR && bodyB->colliderType == ColliderType::WALL)
+		{
+			std::cout << "Collision with wall detected.\n";
+		}
+		else if (bodyA->colliderType == ColliderType::WALL && bodyB->colliderType == ColliderType::CAR)
+		{
+			std::cout << "Collision with wall detected.\n";
+		}
+	}
 }
 
 

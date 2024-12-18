@@ -18,7 +18,9 @@ public:
 	bool Start();
 	update_status Update();
 	void CreateBorders();
-	bool CleanUp();	
+	bool CleanUp();
+	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
+
 
 
 private:
