@@ -50,6 +50,7 @@ public:
     float oilCooldownTimeLeft;
     const float oilCooldownDuration = 5.0f;
 
-	Application* App;
+	bool applyBoost = false;
+
 	
 };

@@ -134,6 +134,11 @@ void Car::Accelerate()
         newVelocity += b2Vec2(direction.x * nitroFactor, direction.y * nitroFactor);
     }
 
+	if (applyBoost) {
+		newVelocity += b2Vec2(direction.x * 50.0f, direction.y * 50.0f);
+		applyBoost = false;
+	}
+
     body->body->SetLinearVelocity(newVelocity);
 }
 
@@ -225,10 +230,6 @@ void Car::ApplyBoost(float boostFactor) {
 
     body->body->SetLinearVelocity(boost);
 
-	Vector2 position = {
-		body->body->GetPosition().x * PIXELS_PER_METER,
-		body->body->GetPosition().y * PIXELS_PER_METER
-	};
    
 }
 

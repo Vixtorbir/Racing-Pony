@@ -23,12 +23,11 @@ bool ModuleGame::Start()
 
     App->renderer->camera.x = App->renderer->camera.y = 0;
 
-    // Crear coche
     car1 = new Car(App->physics, 400, 100, this);
 
     nitro = new Nitro(App->physics->CreateRectangleSensor(200, 300, 20,20), LoadTexture("Assets/nitro.png"),this);
 
-	oil = new OilSlick(App->physics->CreateCircleSensor(400, 500, 15), LoadTexture("Assets/stain.png"), this);
+	oil = new OilSlick(App->physics->CreateCircleSensor(400, 580, 15), LoadTexture("Assets/stain.png"), this);
 
 
     return ret;
@@ -139,6 +138,8 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
             Nitro* nitro = static_cast<Nitro*>(bodyB->entity);
             if (nitro && !nitro->isCollected()) 
             {
+                car1->applyBoost = true;
+
                 b2Vec2 carPosition = car1->body->body->GetPosition();
                 Vector2 position = {
                     carPosition.x * PIXELS_PER_METER,
@@ -146,7 +147,8 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
                 };
                 App->particleSystem->SpawnParticles(position, ParticleType::NITRO);
                 nitro->OnPlayerCollision();
-                car1->ApplyBoost(15.0f); 
+				
+                car1->ApplyBoost(25.0f); 
             }
         }
         if (bodyB->colliderType == ColliderType::OIL) {
