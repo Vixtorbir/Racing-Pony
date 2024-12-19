@@ -26,9 +26,9 @@ bool ModuleGame::Start()
     // Crear coche
     car1 = new Car(App->physics, 400, 100, this);
 
-    nitro = new Nitro(App->physics->CreateRectangleSensor(200, 300, 60,40), LoadTexture("Assets/Car.png"),this);
+    nitro = new Nitro(App->physics->CreateRectangleSensor(200, 300, 20,20), LoadTexture("Assets/nitro.png"),this);
 
-	oil = new OilSlick(App->physics->CreateCircleSensor(400, 500, 20), LoadTexture("Assets/Car.png"), this);
+	oil = new OilSlick(App->physics->CreateCircleSensor(400, 500, 15), LoadTexture("Assets/stain.png"), this);
 
 
     return ret;
