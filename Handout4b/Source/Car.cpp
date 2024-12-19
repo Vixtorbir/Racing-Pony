@@ -110,9 +110,8 @@ bool Car::CleanUp()
     return true;
 }
 
-void Car::Accelerate()
-{
-    if (isSpinning) return; 
+void Car::Accelerate() {
+    if (isSpinning) return;
 
     const float maxSpeed = 8.5f;
     const float accelerationRate = 0.9f;
@@ -122,25 +121,20 @@ void Car::Accelerate()
         currentAcceleration = maxSpeed;
     }
 
-    
     b2Vec2 direction = b2Vec2(sinf(body->GetRotation()), -cosf(body->GetRotation()));
-
     direction.Normalize();
 
-    b2Vec2 newVelocity = b2Vec2(direction.x * currentAcceleration, direction.y * currentAcceleration);
+	b2Vec2 newVelocity = b2Vec2(direction.x * currentAcceleration, direction.y * currentAcceleration);
 
-    if (nitroActive) 
-    {
-        newVelocity += b2Vec2(direction.x * nitroFactor, direction.y * nitroFactor);
+    if (applyBoost) {
+		b2Vec2 boost = b2Vec2(direction.x * 40.0f, direction.y * 40.0f);
+        newVelocity += boost;
+        applyBoost = false; 
     }
-
-	if (applyBoost) {
-		newVelocity += b2Vec2(direction.x * 50.0f, direction.y * 50.0f);
-		applyBoost = false;
-	}
 
     body->body->SetLinearVelocity(newVelocity);
 }
+
 
 
 
@@ -226,10 +220,13 @@ void Car::ApplyBoost(float boostFactor) {
     b2Vec2 direction = b2Vec2(sinf(body->GetRotation()), -cosf(body->GetRotation()));
     direction.Normalize();
 
+    b2Vec2 currentVelocity = body->body->GetLinearVelocity();
+
 	b2Vec2 boost = b2Vec2(direction.x * boostFactor, direction.y * boostFactor);
 
-    body->body->SetLinearVelocity(boost);
+    b2Vec2 newVelocity = currentVelocity + boost;
 
-   
+    body->body->SetLinearVelocity(newVelocity);
 }
+
 

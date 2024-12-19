@@ -3,24 +3,30 @@
 #include <iostream>
 
 Nitro::Nitro(PhysBody* body, Texture2D texture, Module* listener)
-    : MapItem(body, texture, listener)
-{
+    : MapItem(body, texture, listener) {
     body->colliderType = ColliderType::NITRO;
     body->entity = this;
 }
 
-Nitro::~Nitro()
-{
+Nitro::~Nitro() {}
+
+void Nitro::OnPlayerCollision() {
+    if (currentCooldown <= 0.0f) {
+        std::cout << "Nitro activated!" << std::endl;
+        currentCooldown = cooldownTime; 
+    }
 }
 
-void Nitro::OnPlayerCollision()
-{
-    std::cout << "Nitro activated!" << std::endl;
-    collected = true;
+bool Nitro::isAvailable() const {
+    return currentCooldown <= 0.0f;
 }
 
-bool Nitro::isCollected() const
-{
-    return collected;
-}
 
+void Nitro::Update() {
+    if (currentCooldown > 0.0f) {
+        currentCooldown -= 1.0f / 60.0f; 
+        if (currentCooldown < 0.0f) {
+            currentCooldown = 0.0f; 
+        }
+    }
+}

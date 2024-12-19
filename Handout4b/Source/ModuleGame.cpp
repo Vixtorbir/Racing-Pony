@@ -63,6 +63,7 @@ update_status ModuleGame::Update()
     App->map->Update();
 
     
+    nitro->Update();
     nitro->Draw();
     oil->Draw();
 
@@ -133,12 +134,12 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
     if (bodyA != nullptr && bodyB != nullptr)
     {
-        if (bodyB->colliderType == ColliderType::NITRO)
-        {
+        if (bodyB->colliderType == ColliderType::NITRO) {
             Nitro* nitro = static_cast<Nitro*>(bodyB->entity);
-            if (nitro && !nitro->isCollected()) 
-            {
-                car1->applyBoost = true;
+            if (nitro && nitro->isAvailable()) { 
+                nitro->OnPlayerCollision(); 
+
+                car1->ApplyBoost(25.0f);
 
                 b2Vec2 carPosition = car1->body->body->GetPosition();
                 Vector2 position = {
@@ -146,9 +147,6 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
                     carPosition.y * PIXELS_PER_METER
                 };
                 App->particleSystem->SpawnParticles(position, ParticleType::NITRO);
-                nitro->OnPlayerCollision();
-				
-                car1->ApplyBoost(25.0f); 
             }
         }
         if (bodyB->colliderType == ColliderType::OIL) {
