@@ -37,7 +37,7 @@ void ModuleParticle::SpawnParticles(Vector2 position, ParticleType type) {
         case ParticleType::SMOKE:
             particle.color = GRAY;
             particle.lifetime = 2.5f;
-            particle.size = 12;
+            particle.size = 14;
             break;
         case ParticleType::NITRO:
             particle.color = ORANGE;

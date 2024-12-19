@@ -21,7 +21,8 @@ enum class ColliderType {
 	OIL,
 	NITRO,
 	ICE,
-	WALL
+	WALL,
+	INSIDE
 };
 
 class PhysBody

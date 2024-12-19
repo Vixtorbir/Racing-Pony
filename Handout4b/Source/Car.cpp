@@ -211,6 +211,8 @@ void Car::Nitro()
         body->body->SetLinearVelocity(currentVelocity + nitroBoost);
 
         nitroCooldownTimeLeft = nitroCooldown;
+
+
     }
 }
 

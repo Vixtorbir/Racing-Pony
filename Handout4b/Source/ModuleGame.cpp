@@ -24,7 +24,7 @@ bool ModuleGame::Start()
     App->renderer->camera.x = App->renderer->camera.y = 0;
 
     // Crear coche
-    car1 = new Car(App->physics, 100, 100, this);
+    car1 = new Car(App->physics, 400, 100, this);
 
     nitro = new Nitro(App->physics->CreateRectangleSensor(200, 300, 60,40), LoadTexture("Assets/Car.png"),this);
 

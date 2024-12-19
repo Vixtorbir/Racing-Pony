@@ -17,7 +17,8 @@ public:
 	~Map();
 	bool Start();
 	update_status Update();
-	void CreateBorders();
+	
+	void CreateBorders(const std::vector<std::pair<int, int>>& points, ColliderType colliderType);
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 
@@ -26,7 +27,12 @@ public:
 private:
 
 	Texture2D mapTexture;
+
 	std::vector<PhysBody*> mapBorders;
 
 	std::vector<std::pair<int, int>> mapPoints;
+
+	std::vector<std::pair<int, int>> insidePointsVector;
+
+	std::vector<PhysBody*> insideBorders;
 };

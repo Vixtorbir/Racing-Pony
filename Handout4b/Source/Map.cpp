@@ -15,19 +15,81 @@ Map::~Map()
 
 bool Map::Start()
 {
-    mapTexture = LoadTexture("Assets/Map.png");
+    mapTexture = LoadTexture("Assets/Map2.png");
 
-    mapPoints.clear(); 
-    mapPoints.push_back(std::make_pair(0, 0));
-    mapPoints.push_back(std::make_pair(0, 720));
-    mapPoints.push_back(std::make_pair(1280, 720));
-    mapPoints.push_back(std::make_pair(1280, 0));
-    mapPoints.push_back(std::make_pair(0, 0));
+    const int borderPoints[] = {
+    287, 111,
+    240, 144,
+    214, 174,
+    185, 232,
+    183, 509,
+    200, 552,
+    239, 594,
+    291, 625,
+    360, 642,
+    1046, 639,
+    1122, 608,
+    1154, 573,
+    1170, 515,
+    1153, 463,
+    1122, 428,
+    1035, 395,
+    573, 394,
+    559, 382,
+    566, 364,
+    1051, 246,
+    1094, 210,
+    1109, 172,
+    1098, 131,
+    1075, 105,
+    1051, 90,
+    1009, 80,
+    379, 78
+    };
 
-    CreateBorders();
+
+    const int insidePoints[] = {
+        400, 163,
+        1000, 159,
+        1008, 168,
+        512, 295,
+        473, 333,
+        459, 369,
+        468, 417,
+        506, 457,
+        563, 474,
+        1027, 477,
+        1062, 496,
+        1065, 537,
+        1025, 560,
+        369, 561,
+        301, 527,
+        280, 488,
+        282, 252,
+        305, 208,
+        354, 172
+    };
+
+    mapPoints.clear();
+    insidePointsVector.clear();
+
+    for (size_t i = 0; i < sizeof(borderPoints) / sizeof(borderPoints[0]); i += 2)
+    {
+        mapPoints.emplace_back(borderPoints[i], borderPoints[i + 1]);
+    }
+
+    for (size_t i = 0; i < sizeof(insidePoints) / sizeof(insidePoints[0]); i += 2)
+    {
+        insidePointsVector.emplace_back(insidePoints[i], insidePoints[i + 1]);
+    }
+
+    CreateBorders(mapPoints, ColliderType::WALL);
+    CreateBorders(insidePointsVector, ColliderType::INSIDE);
 
     return true;
 }
+
+
 
 update_status Map::Update()
 {
@@ -52,23 +114,21 @@ bool ArePointsTooClose(const std::pair<int, int>& p1, const std::pair<int, int>&
 }
 
 
-void Map::CreateBorders()
+void Map::CreateBorders(const std::vector<std::pair<int, int>>& points, ColliderType colliderType)
 {
-    std::vector<int> points;
+    std::vector<int> chainPoints;
 
-    for (size_t i = 0; i < mapPoints.size() - 1; ++i)
+    for (const auto& point : points)
     {
-        points.push_back(mapPoints[i].first);
-        points.push_back(mapPoints[i].second);
-
-        std::cout << "Point " << i << ": (" << mapPoints[i].first << ", " << mapPoints[i].second << ")\n";
+        chainPoints.push_back(point.first);
+        chainPoints.push_back(point.second);
     }
 
-    std::cout << "Creating border with " << points.size() / 2 << " points.\n";
+    std::cout << "Creating border with " << chainPoints.size() / 2 << " points.\n";
 
-    if (points.size() >= 4)
+    if (chainPoints.size() >= 4)
     {
-        PhysBody* border = App->physics->CreateChain(0, 0, points.data(), points.size(), ColliderType::WALL);
+        PhysBody* border = App->physics->CreateChain(0, 0, chainPoints.data(), chainPoints.size(), colliderType);
 
         if (border != nullptr)
         {
@@ -78,15 +138,23 @@ void Map::CreateBorders()
             }
 
             border->listener = this;
-            mapBorders.push_back(border);
-        }
 
+            if (colliderType == ColliderType::WALL)
+            {
+                mapBorders.push_back(border);
+            }
+            else if (colliderType == ColliderType::INSIDE)
+            {
+                insideBorders.push_back(border);
+            }
+        }
     }
     else
     {
         std::cout << "Error: Not enough valid points to create a border.\n";
     }
 }
+
 
 
 
