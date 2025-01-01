@@ -34,6 +34,12 @@ bool ModuleGame::Start()
     checkpoints.push_back(new Checkpoint(App->physics->CreateRectangleSensor(550, 600, 10, 90), 2));
     checkpoints.push_back(new Checkpoint(App->physics->CreateRectangleSensor(235, 340, 92, 10), 3)); 
 
+    menu = LoadTexture("Assets/menuprincipal.png");
+
+    game_over_menu = LoadTexture("Assets/MapComponents/gameovermenu.png");
+
+    pausemenu = LoadTexture("Assets/pausemenu.png");
+
     ResetCheckpoints();
     lapsCompleted = 0;
 
@@ -141,7 +147,49 @@ update_status ModuleGame::Update()
         DrawRectangle(10, 10, 200 * progress, 20, RED); 
         DrawText("Derrapando!", 10, 40, 20, WHITE);
     }
+    switch (game_state) {
 
+
+    case GameState::START_MENU:
+        DrawTexture(menu, 0, 0, WHITE);
+        if (IsKeyPressed(KEY_ENTER))
+        {
+
+            game_state = GameState::PLAYING;
+
+
+        }
+        break;
+
+    case GameState::PLAYING:
+
+        if (IsKeyPressed(KEY_Q)) {
+
+
+            game_state = GameState::PAUSED;
+
+        }
+        break;
+
+    case GameState::PAUSED:
+        DrawTexture(pausemenu, 0, 0, WHITE);
+        if (IsKeyPressed(KEY_Q)) {
+
+
+            game_state = GameState::PLAYING;
+
+        }
+        break;
+
+    }
+
+
+    if (game_state == GameState::GAME_OVER)
+    {
+        //Draw game over menu
+        DrawTexture(game_over_menu, 0, 0, WHITE);
+
+    }
     return UPDATE_CONTINUE;
 }
 

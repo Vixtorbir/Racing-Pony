@@ -17,6 +17,15 @@
 class PhysBody;
 class PhysicEntity;
 
+enum class GameState
+{
+	PLAYING,
+	RESTART,
+	GAME_OVER,
+	PAUSED,
+	START_MENU
+
+};
 
 class ModuleGame : public Module
 {
@@ -50,7 +59,10 @@ public:
 	Car* car1;
 	Nitro* nitro;
 	OilSlick* oil;
-	
+	GameState game_state = GameState::START_MENU;
+	Texture2D menu;
+	Texture2D game_over_menu;
+	Texture2D pausemenu;
 
 	vec2<int> ray;
 	bool ray_on;
