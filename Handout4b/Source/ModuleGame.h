@@ -39,7 +39,6 @@ public:
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 	void ResetCheckpoints();
 	void UpdateLapTime();
-	void CheckBestLap();
 
 public:
 

@@ -302,11 +302,6 @@ void ModuleGame::UpdateLapTime() {
     currentLapTime = GetTime() - lapStartTime; 
 }
 
-void ModuleGame::CheckBestLap() {
-    if (currentLapTime < bestLapTime) {
-        bestLapTime = currentLapTime;
-    }
-    lapStartTime = GetTime(); 
-}
+
 
 
