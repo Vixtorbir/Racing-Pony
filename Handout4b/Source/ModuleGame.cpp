@@ -40,6 +40,10 @@ bool ModuleGame::Start()
 
     pausemenu = LoadTexture("Assets/pausemenu.png");
 
+    bonus_fx= LoadSound("Assets/music/bonus_sfx.wav");
+    car_fx = LoadSound("Assets/music/car_sfx.wav");
+    oil_fx = LoadSound("Assets/music/oil_sfx.wav");
+
     ResetCheckpoints();
     lapsCompleted = 0;
 
@@ -116,11 +120,13 @@ update_status ModuleGame::Update()
     if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
     {
         car1->Accelerate();
+        PlaySound(car_fx);
     }
 
 	if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S))
     {
         car1->Brake();
+        
     }
 
 	if (IsKeyDown(KEY_SPACE))
@@ -240,7 +246,7 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
             Nitro* nitro = static_cast<Nitro*>(bodyB->entity);
             if (nitro && nitro->isAvailable()) { 
                 nitro->OnPlayerCollision(); 
-
+                PlaySound(bonus_fx);
                 car1->ApplyBoost(25.0f);
 
                 b2Vec2 carPosition = car1->body->body->GetPosition();
@@ -254,6 +260,7 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
         if (bodyB->colliderType == ColliderType::OIL) {
             if (oil && car1 && !car1->oilCooldownActive) {
                 oil->OnPlayerCollision();
+                PlaySound(oil_fx);
 
                 b2Vec2 carPosition = car1->body->body->GetPosition();
                 Vector2 position = {

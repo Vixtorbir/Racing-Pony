@@ -63,6 +63,9 @@ public:
 	Texture2D menu;
 	Texture2D game_over_menu;
 	Texture2D pausemenu;
+	Sound bonus_fx;
+	Sound car_fx;
+	Sound oil_fx;
 
 	vec2<int> ray;
 	bool ray_on;
