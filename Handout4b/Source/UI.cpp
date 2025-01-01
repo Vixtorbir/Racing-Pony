@@ -4,7 +4,7 @@
 UI::UI(int totalLaps) : currentLapTime(0.0f), bestLapTime(FLT_MAX), lapsCompleted(0), totalLaps(totalLaps) 
 {
 
-    font = LoadFont("Assets/Fonts/myfont.ttf");
+    font = LoadFont("Assets/myfont.ttf");
 }
 
 UI::~UI() {}
