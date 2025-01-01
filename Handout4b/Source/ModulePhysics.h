@@ -22,7 +22,8 @@ enum class ColliderType {
 	NITRO,
 	ICE,
 	WALL,
-	INSIDE
+	INSIDE,
+	CHECKPOINT
 };
 
 class PhysBody

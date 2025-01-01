@@ -6,6 +6,8 @@
 #include "Boost.h"
 #include "OilSlick.h"
 
+#include "Checkpoint.h"
+
 #include "p2Point.h"
 
 #include "raylib.h"
@@ -25,8 +27,13 @@ public:
 	update_status Update();
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
+	void ResetCheckpoints();
 
 public:
+
+	std::vector<Checkpoint*> checkpoints; 
+	int currentCheckpointIndex; 
+	int lapsCompleted;
 
 	std::vector<PhysicEntity*> entities;
 	

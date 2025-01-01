@@ -29,6 +29,14 @@ bool ModuleGame::Start()
 
 	oil = new OilSlick(App->physics->CreateCircleSensor(400, 580, 15), LoadTexture("Assets/stain.png"), this);
 
+    checkpoints.push_back(new Checkpoint(App->physics->CreateRectangleSensor(440, 115, 10, 90), 0));
+    checkpoints.push_back(new Checkpoint(App->physics->CreateRectangleSensor(750, 433, 10, 80), 1));
+    checkpoints.push_back(new Checkpoint(App->physics->CreateRectangleSensor(550, 600, 10, 90), 2));
+    checkpoints.push_back(new Checkpoint(App->physics->CreateRectangleSensor(235, 340, 92, 10), 3)); 
+
+    ResetCheckpoints();
+    lapsCompleted = 0;
+
 
     return ret;
 }
@@ -71,6 +79,8 @@ update_status ModuleGame::Update()
     car1->Update();
 
     App->particleSystem->Update();
+
+    DrawText(TextFormat("Laps: %d", lapsCompleted), 100, 10, 20, WHITE);
 
 
     int carX, carY;
@@ -134,6 +144,35 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
     if (bodyA != nullptr && bodyB != nullptr)
     {
+        if (bodyB->colliderType == ColliderType::CHECKPOINT) {
+            Checkpoint* checkpoint = static_cast<Checkpoint*>(bodyB->entity);
+            if (checkpoint) {
+                if (checkpoint->index == 0) {
+                    bool allCheckpointsActive = true;
+                    for (Checkpoint* cp : checkpoints) {
+                        if (!cp->isActive) {
+                            allCheckpointsActive = false;
+                            break;
+                        }
+                    }
+
+                    if (allCheckpointsActive) {
+                        lapsCompleted++;
+                        ResetCheckpoints();
+                        LOG("Lap completed! Total laps: %d", lapsCompleted);
+                    }
+
+                    checkpoint->isActive = true;
+                    currentCheckpointIndex = 1; 
+                }
+                else if (checkpoint->index == currentCheckpointIndex) {
+                   
+                    checkpoint->isActive = true;
+                    currentCheckpointIndex++;
+                }
+            }
+        }
+
         if (bodyB->colliderType == ColliderType::NITRO) {
             Nitro* nitro = static_cast<Nitro*>(bodyB->entity);
             if (nitro && nitro->isAvailable()) { 
@@ -179,5 +218,12 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
             }
         }
 
+    }
+}
+
+void ModuleGame::ResetCheckpoints() {
+    currentCheckpointIndex = 0;
+    for (Checkpoint* checkpoint : checkpoints) {
+        checkpoint->isActive = false;
     }
 }
