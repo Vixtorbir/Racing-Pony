@@ -15,4 +15,5 @@ private:
     float bestLapTime;
     int lapsCompleted;
     int totalLaps;
+	Font font;
 };
