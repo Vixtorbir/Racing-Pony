@@ -5,13 +5,14 @@
 #include "Car.h"
 #include "Boost.h"
 #include "OilSlick.h"
-
 #include "Checkpoint.h"
+#include "UI.h"
 
 #include "p2Point.h"
 
 #include "raylib.h"
 #include <vector>
+#include <cfloat> 
 
 class PhysBody;
 class PhysicEntity;
@@ -28,12 +29,21 @@ public:
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 	void ResetCheckpoints();
+	void UpdateLapTime();
+	void CheckBestLap();
 
 public:
 
 	std::vector<Checkpoint*> checkpoints; 
-	int currentCheckpointIndex; 
-	int lapsCompleted;
+	int currentCheckpointIndex;
+
+	int totalLaps = 3;
+	int lapsCompleted = 0;
+	float lapStartTime = 0.0f;
+	float currentLapTime = 0.0f;
+	float bestLapTime = FLT_MAX;
+
+	UI* ui = nullptr;
 
 	std::vector<PhysicEntity*> entities;
 	

@@ -37,6 +37,9 @@ bool ModuleGame::Start()
     ResetCheckpoints();
     lapsCompleted = 0;
 
+    ui = new UI(totalLaps);
+    lapStartTime = GetTime();
+
 
     return ret;
 }
@@ -80,7 +83,10 @@ update_status ModuleGame::Update()
 
     App->particleSystem->Update();
 
-    DrawText(TextFormat("Laps: %d", lapsCompleted), 100, 10, 20, WHITE);
+    UpdateLapTime();
+
+    ui->Update(currentLapTime, bestLapTime, lapsCompleted);
+    ui->Draw();
 
 
     int carX, carY;
@@ -157,21 +163,30 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
                     }
 
                     if (allCheckpointsActive) {
+                        float currentLapTime = GetTime() - lapStartTime;
+
+                        if (bestLapTime == 0.0f || currentLapTime < bestLapTime) {
+                            bestLapTime = currentLapTime;
+                            LOG("New best lap time: %.2f seconds", bestLapTime);
+                        }
+                        lapStartTime = GetTime();
+
                         lapsCompleted++;
                         ResetCheckpoints();
                         LOG("Lap completed! Total laps: %d", lapsCompleted);
+                        LOG("Current lap time: %.2f seconds", currentLapTime);
                     }
 
                     checkpoint->isActive = true;
-                    currentCheckpointIndex = 1; 
+                    currentCheckpointIndex = 1;
                 }
                 else if (checkpoint->index == currentCheckpointIndex) {
-                   
                     checkpoint->isActive = true;
                     currentCheckpointIndex++;
                 }
             }
         }
+
 
         if (bodyB->colliderType == ColliderType::NITRO) {
             Nitro* nitro = static_cast<Nitro*>(bodyB->entity);
@@ -227,3 +242,16 @@ void ModuleGame::ResetCheckpoints() {
         checkpoint->isActive = false;
     }
 }
+
+void ModuleGame::UpdateLapTime() {
+    currentLapTime = GetTime() - lapStartTime; 
+}
+
+void ModuleGame::CheckBestLap() {
+    if (currentLapTime < bestLapTime) {
+        bestLapTime = currentLapTime;
+    }
+    lapStartTime = GetTime(); 
+}
+
+
