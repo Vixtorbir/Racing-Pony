@@ -16,19 +16,13 @@ void UI::Update(float currentLapTime, float bestLapTime, int lapsCompleted) {
 }
 
 void UI::Draw() {
-	// Dibujar información de vueltas con fuente personalizada
 
-    DrawTextEx(font, TextFormat("Laps: %d / %d", lapsCompleted, totalLaps), { 20, 20 }, 20, 0, WHITE);
+    DrawTextEx(font, TextFormat("Laps: %d / %d", lapsCompleted, totalLaps), { 340, 20 }, 30, 0, BLACK);
    
-
-	// Dibujar tiempo actual de vuelta con fuente personalizada
-
-	DrawTextEx(font, TextFormat("Current Lap: %.2f s", currentLapTime), { 20, 50 }, 20, 0, WHITE);
-
-	// Dibujar el mejor tiempo de vuelta con fuente personalizada
+	DrawTextEx(font, TextFormat("Current Lap: %.2f s", currentLapTime), { 490, 20 }, 30, 0, BLACK);
 
     if (bestLapTime < FLT_MAX) {
        
-		DrawTextEx(font, TextFormat("Best Lap: %.2f s", bestLapTime), { 20, 80 }, 20, 0, WHITE);
+		DrawTextEx(font, TextFormat("Best Lap: %.2f s", bestLapTime), { 790, 20 }, 30, 0, BLACK);
     }
 }

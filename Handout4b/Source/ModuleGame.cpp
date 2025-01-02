@@ -109,6 +109,8 @@ update_status ModuleGame::Update()
 
         }
 
+        car1->Draw();
+
         trafficLight->Update();
 
         if (!trafficLight->IsCountdownFinished()) {
@@ -127,30 +129,12 @@ update_status ModuleGame::Update()
             nitro->Draw();
             oil->Draw();
             car1->Update();
+            car1->Draw();
 
             App->particleSystem->Update();
             UpdateLapTime();
             ui->Update(currentLapTime, bestLapTime, lapsCompleted);
             ui->Draw();
-
-
-            int carX, carY;
-            car1->body->GetPhysicPosition(carX, carY);
-
-
-            carX -= car1->texture.width / 2;
-            carY -= car1->texture.height / 2;
-
-
-
-            DrawTexturePro(car1->texture,
-                Rectangle{ 0, 0, (float)car1->texture.width, (float)car1->texture.height },
-                Rectangle{ (float)carX + car1->texture.width / 2, (float)carY + car1->texture.height / 2,
-                           (float)car1->texture.width, (float)car1->texture.height },
-                Vector2{ (float)car1->texture.width / 2, (float)car1->texture.height / 2 },
-                rotation,
-                WHITE);
-
 
             if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
             {
@@ -262,7 +246,7 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
             if (nitro && nitro->isAvailable()) { 
                 nitro->OnPlayerCollision(); 
                 PlaySound(bonus_fx);
-                car1->ApplyBoost(25.0f);
+                car1->ApplyBoost(15.0f);
 
                 b2Vec2 carPosition = car1->body->body->GetPosition();
                 Vector2 position = {

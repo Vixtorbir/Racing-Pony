@@ -21,22 +21,24 @@ public:
     void Brake();
     void Turn(float direction, bool turn);
 	void Nitro();
+
     void ApplyBoost(float boostFactor);
+   
+	void Draw();
 
   
 
 public:
     Texture2D texture;
 
-	float currentAcceleration;
 
     bool nitroActive = false;       
     float nitroTimeLeft = 0.0f;    
 
-    const float nitroFactor = 7.0f; 
+    
     const float nitroDuration = 1.0f;
 
-    const float nitroCooldown = 5.0f; 
+    const float nitroCooldown = 3.0f; 
     float nitroCooldownTimeLeft = 0.0f;
 
     bool isSpinning;              
@@ -50,7 +52,7 @@ public:
     float oilCooldownTimeLeft;
     const float oilCooldownDuration = 5.0f;
 
-	bool applyBoost = false;
+	
 
 	
 };
