@@ -1,5 +1,5 @@
 #include "TrafficLight.h"
-#include <corecrt_math.h>
+#include <cmath>
 
 TrafficLight::TrafficLight() : countdownTime(0), timeRemaining(0), countdownActive(false) {}
 
@@ -14,17 +14,24 @@ void TrafficLight::StartCountdown(float duration) {
 void TrafficLight::Update() {
     if (countdownActive) {
         timeRemaining -= GetFrameTime();
-        if (timeRemaining <= 0) {
+        if (timeRemaining <= -1.0f) { 
             countdownActive = false;
         }
     }
 }
 
 void TrafficLight::Draw() {
-    if (countdownActive) {
-        int displayTime = static_cast<int>(ceil(timeRemaining));
-        const char* text = (displayTime > 0) ? TextFormat("%d", displayTime) : "GO!";
-        int fontSize = 100;
+    if (countdownActive || timeRemaining > -1.0f) { 
+        const char* text = nullptr;
+        if (timeRemaining > 0) {
+            int displayTime = static_cast<int>(ceil(timeRemaining));
+            text = TextFormat("%d", displayTime); 
+        }
+        else {
+            text = "GO!"; 
+        }
+
+        int fontSize = 120;
         Vector2 textSize = MeasureTextEx(GetFontDefault(), text, fontSize, 2);
         DrawText(text, (GetScreenWidth() - textSize.x) / 2, (GetScreenHeight() - textSize.y) / 2, fontSize, BLACK);
     }
