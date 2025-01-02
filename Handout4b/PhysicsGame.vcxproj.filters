@@ -49,6 +49,9 @@
     <ClCompile Include="Source\UI.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="Source\TrafficLight.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source/p2Point.h">
@@ -106,6 +109,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Source\UI.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TrafficLight.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

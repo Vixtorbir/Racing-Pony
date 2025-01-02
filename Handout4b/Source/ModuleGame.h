@@ -7,6 +7,7 @@
 #include "OilSlick.h"
 #include "Checkpoint.h"
 #include "UI.h"
+#include "TrafficLight.h"
 
 #include "p2Point.h"
 
@@ -68,4 +69,8 @@ public:
 
 	vec2<int> ray;
 	bool ray_on;
+
+	TrafficLight* trafficLight;
+	bool canControlCar;
+
 };

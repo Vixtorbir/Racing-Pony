@@ -48,7 +48,11 @@ bool ModuleGame::Start()
     lapsCompleted = 0;
 
     ui = new UI(totalLaps);
-    lapStartTime = GetTime();
+
+    trafficLight = new TrafficLight();
+    trafficLight->StartCountdown(3.0f); 
+    canControlCar = false;
+    
 
 
     return ret;
@@ -80,79 +84,8 @@ update_status ModuleGame::Update()
         ray.y = GetMouseY();
     }
 
-    
-    App->map->Update();
+    float rotation = car1->body->GetRotation() * RAD2DEG;
 
-    
-    nitro->Update();
-    nitro->Draw();
-    oil->Draw();
-
-	
-    car1->Update();
-
-    App->particleSystem->Update();
-
-    UpdateLapTime();
-
-    ui->Update(currentLapTime, bestLapTime, lapsCompleted);
-    ui->Draw();
-
-
-    int carX, carY;
-    car1->body->GetPhysicPosition(carX, carY);
-
-    
-    carX -= car1->texture.width / 2;
-    carY -= car1->texture.height / 2;
-
-    float rotation = car1->body->GetRotation() * RAD2DEG; 
-
-    DrawTexturePro(car1->texture,
-        Rectangle{ 0, 0, (float)car1->texture.width, (float)car1->texture.height }, 
-        Rectangle{ (float)carX + car1->texture.width / 2, (float)carY + car1->texture.height / 2,
-                   (float)car1->texture.width, (float)car1->texture.height }, 
-        Vector2{ (float)car1->texture.width / 2, (float)car1->texture.height / 2 },
-        rotation, 
-        WHITE);
-
-    
-    if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
-    {
-        car1->Accelerate();
-        PlaySound(car_fx);
-    }
-
-	if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S))
-    {
-        car1->Brake();
-        
-    }
-
-	if (IsKeyDown(KEY_SPACE))
-	{
-		car1->Nitro();
-	}
-
-	if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
-    {
-        car1->Turn(-1, true);
-    }
-	else if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
-    {
-        car1->Turn(1, true);
-    }
-    else
-    {
-        car1->Turn(0, false); 
-    }
-
-    if (car1->isSpinning) {
-        float progress = car1->spinningTimeLeft / car1->spinningDuration;
-
-        DrawRectangle(10, 10, 200 * progress, 20, RED); 
-        DrawText("Derrapando!", 10, 40, 20, WHITE);
-    }
     switch (game_state) {
 
 
@@ -175,6 +108,88 @@ update_status ModuleGame::Update()
             game_state = GameState::PAUSED;
 
         }
+
+        trafficLight->Update();
+
+        if (!trafficLight->IsCountdownFinished()) {
+            trafficLight->Draw();
+            return UPDATE_CONTINUE; 
+        }
+        else if (!canControlCar) {
+            canControlCar = true;
+            lapStartTime = GetTime(); 
+        }
+
+        if (canControlCar) 
+        {
+            App->map->Update();
+            nitro->Update();
+            nitro->Draw();
+            oil->Draw();
+            car1->Update();
+
+            App->particleSystem->Update();
+            UpdateLapTime();
+            ui->Update(currentLapTime, bestLapTime, lapsCompleted);
+            ui->Draw();
+
+
+            int carX, carY;
+            car1->body->GetPhysicPosition(carX, carY);
+
+
+            carX -= car1->texture.width / 2;
+            carY -= car1->texture.height / 2;
+
+
+
+            DrawTexturePro(car1->texture,
+                Rectangle{ 0, 0, (float)car1->texture.width, (float)car1->texture.height },
+                Rectangle{ (float)carX + car1->texture.width / 2, (float)carY + car1->texture.height / 2,
+                           (float)car1->texture.width, (float)car1->texture.height },
+                Vector2{ (float)car1->texture.width / 2, (float)car1->texture.height / 2 },
+                rotation,
+                WHITE);
+
+
+            if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
+            {
+                car1->Accelerate();
+                // PlaySound(car_fx);
+            }
+
+            if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S))
+            {
+                car1->Brake();
+
+            }
+
+            if (IsKeyDown(KEY_SPACE))
+            {
+                car1->Nitro();
+            }
+
+            if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
+            {
+                car1->Turn(-1, true);
+            }
+            else if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
+            {
+                car1->Turn(1, true);
+            }
+            else
+            {
+                car1->Turn(0, false);
+            }
+
+            if (car1->isSpinning) {
+                float progress = car1->spinningTimeLeft / car1->spinningDuration;
+
+                DrawRectangle(10, 10, 200 * progress, 20, RED);
+                DrawText("Derrapando!", 10, 40, 20, WHITE);
+            }
+        }
+
         break;
 
     case GameState::PAUSED:
@@ -292,6 +307,9 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 }
 
 void ModuleGame::ResetCheckpoints() {
+    
+    //añadir sonido que pasas por la meta
+
     currentCheckpointIndex = 0;
     for (Checkpoint* checkpoint : checkpoints) {
         checkpoint->isActive = false;
