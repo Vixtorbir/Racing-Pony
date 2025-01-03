@@ -26,7 +26,8 @@ enum class GameState
 	GAME_OVER,
 	PAUSED,
 	START_MENU,
-	SELECT_CHARACTER_MENU
+	SELECT_CHARACTER_MENU,
+	SELECT_MAP_MENU
 
 };
 
@@ -81,5 +82,10 @@ public:
 	Texture2D character1Texture;
 	Texture2D character2Texture;
 	int selectedCharacter = 0;
+
+	Texture2D map1Texture;  
+	Texture2D map2Texture;  
+	int selectedMap = 0;    
+	bool iceMap = false;
 
 };

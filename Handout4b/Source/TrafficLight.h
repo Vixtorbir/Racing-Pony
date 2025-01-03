@@ -6,6 +6,8 @@ public:
     TrafficLight();
     ~TrafficLight();
 
+    void Initialize();
+
     void StartCountdown(float duration);
     void Update();
     void Draw();
@@ -16,4 +18,10 @@ private:
     float countdownTime; 
     float timeRemaining; 
     bool countdownActive;
+
+	Sound beepSound;
+	Sound goSound;
+
+    int lastDisplayedNumber =-1;
+
 };

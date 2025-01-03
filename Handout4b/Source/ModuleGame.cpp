@@ -8,7 +8,7 @@
 #include "Map.h" 
 
 
-ModuleGame::ModuleGame(Application* app, bool start_enabled) : Module(app, start_enabled), selectedCharacter(0)
+ModuleGame::ModuleGame(Application* app, bool start_enabled) : Module(app, start_enabled), selectedCharacter(0), iceMap(false)
 {
     ray_on = false;
 }
@@ -28,6 +28,9 @@ bool ModuleGame::Start()
     character2Texture = LoadTexture("Assets/Car.png"); //Crear otra textura para la ia
 
     selectedCharacter = 0;
+
+    map1Texture = LoadTexture("Assets/map1_preview.png");
+    map2Texture = LoadTexture("Assets/map2_preview.png");
 
     nitro = new Nitro(App->physics->CreateRectangleSensor(200, 300, 20,20), LoadTexture("Assets/nitro.png"),this);
 
@@ -54,6 +57,7 @@ bool ModuleGame::Start()
     ui = new UI(totalLaps);
 
     trafficLight = new TrafficLight();
+	trafficLight->Initialize();
     trafficLight->StartCountdown(3.0f); 
     canControlCar = false;
     
@@ -94,9 +98,10 @@ update_status ModuleGame::Update()
 
     case GameState::START_MENU:
         DrawTexture(menu, 0, 0, WHITE);
+		
         if (IsKeyPressed(KEY_ENTER))
         {
-
+            //PlaySound(el que sea);
             game_state = GameState::SELECT_CHARACTER_MENU;
 
 
@@ -140,16 +145,18 @@ update_status ModuleGame::Update()
           //    {235, 340}
           //};
           //aiCar->SetWaypoints(waypoints);
-
+          
+            //PlaySound(el que sea);
             game_state = GameState::PLAYING;
         }
         break;
 
     case GameState::PLAYING:
 
+        //PlayMusicStream(musica de fondo);
         if (IsKeyPressed(KEY_Q)) {
 
-
+            //PlaySound(el que sea);
             game_state = GameState::PAUSED;
 
         }
@@ -240,7 +247,7 @@ update_status ModuleGame::Update()
         DrawTexture(pausemenu, 0, 0, WHITE);
         if (IsKeyPressed(KEY_Q)) {
 
-
+			//PlaySound(el que sea);
             game_state = GameState::PLAYING;
 
         }
@@ -251,7 +258,8 @@ update_status ModuleGame::Update()
 
     if (game_state == GameState::GAME_OVER)
     {
-        //Draw game over menu
+        
+        //PlaySound(el que sea);
         DrawTexture(game_over_menu, 0, 0, WHITE);
 
     }
@@ -285,6 +293,7 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
                         lapStartTime = GetTime();
 
                         lapsCompleted++;
+                        //PlaySound(el que sea);
                         ResetCheckpoints();
                         LOG("Lap completed! Total laps: %d", lapsCompleted);
                         LOG("Current lap time: %.2f seconds", currentLapTime);
