@@ -31,7 +31,7 @@ void TrafficLight::Draw() {
             text = "GO!"; 
         }
 
-        int fontSize = 120;
+        int fontSize = 320;
         Vector2 textSize = MeasureTextEx(GetFontDefault(), text, fontSize, 2);
         DrawText(text, (GetScreenWidth() - textSize.x) / 2, (GetScreenHeight() - textSize.y) / 2, fontSize, BLACK);
     }

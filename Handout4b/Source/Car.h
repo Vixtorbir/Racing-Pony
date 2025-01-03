@@ -11,7 +11,7 @@ class PhysBody;
 
 class Car : public PhysicEntity {
 public:
-    Car(ModulePhysics* physics, int _x, int _y, Module* _listener);
+    Car(ModulePhysics* physics, int _x, int _y, Module* _listener, Texture2D _texture);
     ~Car();
 
    void Update() override;
@@ -29,8 +29,9 @@ public:
   
 
 public:
-    Texture2D texture;
 
+    Texture2D texture;
+    
 
     bool nitroActive = false;       
     float nitroTimeLeft = 0.0f;    

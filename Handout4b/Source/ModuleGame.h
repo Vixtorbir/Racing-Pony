@@ -8,6 +8,7 @@
 #include "Checkpoint.h"
 #include "UI.h"
 #include "TrafficLight.h"
+#include "AICar.h"
 
 #include "p2Point.h"
 
@@ -24,7 +25,8 @@ enum class GameState
 	RESTART,
 	GAME_OVER,
 	PAUSED,
-	START_MENU
+	START_MENU,
+	SELECT_CHARACTER_MENU
 
 };
 
@@ -72,5 +74,12 @@ public:
 
 	TrafficLight* trafficLight;
 	bool canControlCar;
+
+	AICar* aiCar;
+	std::vector<Waypoint> waypoints;
+
+	Texture2D character1Texture;
+	Texture2D character2Texture;
+	int selectedCharacter = 0;
 
 };

@@ -7,7 +7,8 @@
 #include "Car.h"
 #include "Map.h" 
 
-ModuleGame::ModuleGame(Application* app, bool start_enabled) : Module(app, start_enabled)
+
+ModuleGame::ModuleGame(Application* app, bool start_enabled) : Module(app, start_enabled), selectedCharacter(0)
 {
     ray_on = false;
 }
@@ -23,7 +24,10 @@ bool ModuleGame::Start()
 
     App->renderer->camera.x = App->renderer->camera.y = 0;
 
-    car1 = new Car(App->physics, 400, 100, this);
+    character1Texture = LoadTexture("Assets/Car.png");
+    character2Texture = LoadTexture("Assets/Car.png"); //Crear otra textura para la ia
+
+    selectedCharacter = 0;
 
     nitro = new Nitro(App->physics->CreateRectangleSensor(200, 300, 20,20), LoadTexture("Assets/nitro.png"),this);
 
@@ -84,7 +88,6 @@ update_status ModuleGame::Update()
         ray.y = GetMouseY();
     }
 
-    float rotation = car1->body->GetRotation() * RAD2DEG;
 
     switch (game_state) {
 
@@ -94,9 +97,51 @@ update_status ModuleGame::Update()
         if (IsKeyPressed(KEY_ENTER))
         {
 
+            game_state = GameState::SELECT_CHARACTER_MENU;
+
+
+        }
+        break;
+    case GameState::SELECT_CHARACTER_MENU:
+
+        DrawTexture(character1Texture, GetScreenWidth() / 2 - 200, GetScreenHeight() / 2 - character1Texture.height / 2, WHITE);
+        DrawTexture(character2Texture, GetScreenWidth() / 2 + 100, GetScreenHeight() / 2 - character2Texture.height / 2, WHITE);
+
+        if (selectedCharacter == 0) {
+            DrawRectangleLines(GetScreenWidth() / 2 - 210, GetScreenHeight() / 2 - character1Texture.height / 2 - 10,
+                character1Texture.width + 20, character1Texture.height + 20, YELLOW);
+        }
+        else {
+            DrawRectangleLines(GetScreenWidth() / 2 + 90, GetScreenHeight() / 2 - character2Texture.height / 2 - 10,
+                character2Texture.width + 20, character2Texture.height + 20, YELLOW);
+        }
+
+        if (IsKeyPressed(KEY_RIGHT)) selectedCharacter = 1;
+        if (IsKeyPressed(KEY_LEFT)) selectedCharacter = 0;
+
+        if (IsKeyPressed(KEY_ENTER)) {
+            
+            Texture2D playerTexture = (selectedCharacter == 0) ? character1Texture : character2Texture;
+            Texture2D aiTexture = (selectedCharacter == 0) ? character2Texture : character1Texture;
+
+           
+            car1 = new Car(App->physics, 400, 130, this, playerTexture);
+          //aiCar = new AICar(App->physics, 400, 100, this, aiTexture);
+          //
+          //
+          //waypoints = {
+          //    {440, 115},
+          //    {640, 115},
+          //    {840, 115},
+          //    {1030, 133},
+          //    {1040, 180},
+          //    {750, 303},
+          //    {550, 600},
+          //    {235, 340}
+          //};
+          //aiCar->SetWaypoints(waypoints);
+
             game_state = GameState::PLAYING;
-
-
         }
         break;
 
@@ -109,7 +154,14 @@ update_status ModuleGame::Update()
 
         }
 
+        for (const Waypoint& wp : waypoints) {
+            DrawCircle(wp.x, wp.y, 10, BLACK); 
+        }
+
+
         car1->Draw();
+      //  aiCar->Draw();
+
 
         trafficLight->Update();
 
@@ -131,15 +183,23 @@ update_status ModuleGame::Update()
             car1->Update();
             car1->Draw();
 
+         //   aiCar->Update(waypoints);
+         //   aiCar->Draw();
+
             App->particleSystem->Update();
             UpdateLapTime();
             ui->Update(currentLapTime, bestLapTime, lapsCompleted);
             ui->Draw();
 
+            for (const Waypoint& wp : waypoints) {
+                DrawCircle(wp.x, wp.y, 10, BLACK); // Dibuja un círculo negro en cada waypoint esto esta para hacer debug luego se quita
+            }
+
+
             if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
             {
                 car1->Accelerate();
-                // PlaySound(car_fx);
+                
             }
 
             if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S))
