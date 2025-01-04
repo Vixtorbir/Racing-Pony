@@ -35,11 +35,11 @@ void MenuManager::DrawMainMenu() {
 }
 
 void MenuManager::DrawCharacterSelectMenu(int selectedCharacter) {
-    DrawTexture(character1Texture, GetScreenWidth() / 2 - 200, GetScreenHeight() / 2 - character1Texture.height / 2, WHITE);
+    DrawTexture(character1Texture, GetScreenWidth() / 2 - 400, GetScreenHeight() / 2 - character1Texture.height / 2, WHITE);
     DrawTexture(character2Texture, GetScreenWidth() / 2 + 100, GetScreenHeight() / 2 - character2Texture.height / 2, WHITE);
 
     if (selectedCharacter == 0) {
-        DrawRectangleLines(GetScreenWidth() / 2 - 210, GetScreenHeight() / 2 - character1Texture.height / 2 - 10,
+        DrawRectangleLines(GetScreenWidth() / 2 - 410, GetScreenHeight() / 2 - character1Texture.height / 2 - 10,
             character1Texture.width + 20, character1Texture.height + 20, YELLOW);
     }
     else {
