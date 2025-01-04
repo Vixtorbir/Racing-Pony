@@ -194,6 +194,7 @@
     <ClInclude Include="Source\Checkpoint.h" />
     <ClInclude Include="Source\Map.h" />
     <ClInclude Include="Source\MapItem.h" />
+    <ClInclude Include="Source\MenuManager.h" />
     <ClInclude Include="Source\ModuleGame.h" />
     <ClInclude Include="Source\ModuleParticle.h" />
     <ClInclude Include="Source\OilSlick.h" />
@@ -215,6 +216,7 @@
     <ClCompile Include="Source\Car.cpp" />
     <ClCompile Include="Source\Map.cpp" />
     <ClCompile Include="Source\MapItem.cpp" />
+    <ClCompile Include="Source\MenuManager.cpp" />
     <ClCompile Include="Source\ModuleGame.cpp" />
     <ClCompile Include="Source\ModuleParticle.cpp" />
     <ClCompile Include="Source\OilSlick.cpp" />

@@ -9,6 +9,7 @@
 #include "UI.h"
 #include "TrafficLight.h"
 #include "AICar.h"
+#include "MenuManager.h"
 
 #include "p2Point.h"
 
@@ -63,9 +64,7 @@ public:
 	Nitro* nitro;
 	OilSlick* oil;
 	GameState game_state = GameState::START_MENU;
-	Texture2D menu;
-	Texture2D game_over_menu;
-	Texture2D pausemenu;
+
 	Sound bonus_fx;
 	Sound car_fx;
 	Sound oil_fx;
@@ -76,16 +75,10 @@ public:
 	TrafficLight* trafficLight;
 	bool canControlCar;
 
-	AICar* aiCar;
-	std::vector<Waypoint> waypoints;
-
-	Texture2D character1Texture;
-	Texture2D character2Texture;
 	int selectedCharacter = 0;
-
-	Texture2D map1Texture;  
-	Texture2D map2Texture;  
 	int selectedMap = 0;    
 	bool iceMap = false;
+
+	MenuManager* menuManager;
 
 };

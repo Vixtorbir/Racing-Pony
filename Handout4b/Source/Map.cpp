@@ -190,6 +190,11 @@ void Map::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	}
 }
 
+void Map::SetMapTexture(Texture2D texture)
+{
+    mapTexture = texture;
+}
+
 
 
 

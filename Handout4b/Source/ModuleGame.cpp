@@ -8,9 +8,11 @@
 #include "Map.h" 
 
 
+
 ModuleGame::ModuleGame(Application* app, bool start_enabled) : Module(app, start_enabled), selectedCharacter(0), iceMap(false)
 {
     ray_on = false;
+    
 }
 
 ModuleGame::~ModuleGame()
@@ -23,14 +25,13 @@ bool ModuleGame::Start()
     bool ret = true;
 
     App->renderer->camera.x = App->renderer->camera.y = 0;
+   
+    menuManager = new MenuManager();
 
-    character1Texture = LoadTexture("Assets/Car.png");
-    character2Texture = LoadTexture("Assets/Car.png"); //Crear otra textura para la ia
+    menuManager->LoadAssets();
 
     selectedCharacter = 0;
-
-    map1Texture = LoadTexture("Assets/map1_preview.png");
-    map2Texture = LoadTexture("Assets/map2_preview.png");
+    selectedMap = 0;
 
     nitro = new Nitro(App->physics->CreateRectangleSensor(200, 300, 20,20), LoadTexture("Assets/nitro.png"),this);
 
@@ -41,11 +42,6 @@ bool ModuleGame::Start()
     checkpoints.push_back(new Checkpoint(App->physics->CreateRectangleSensor(550, 600, 10, 90), 2));
     checkpoints.push_back(new Checkpoint(App->physics->CreateRectangleSensor(235, 340, 92, 10), 3)); 
 
-    menu = LoadTexture("Assets/menuprincipal.png");
-
-    game_over_menu = LoadTexture("Assets/MapComponents/gameovermenu.png");
-
-    pausemenu = LoadTexture("Assets/pausemenu.png");
 
     bonus_fx= LoadSound("Assets/music/bonus_sfx.wav");
     car_fx = LoadSound("Assets/music/car_sfx.wav");
@@ -78,6 +74,35 @@ bool ModuleGame::CleanUp()
         car1 = nullptr;
     }
 
+	if (nitro != nullptr)
+	{
+		delete nitro;
+		nitro = nullptr;
+	}
+
+	if (oil != nullptr)
+	{
+		delete oil;
+		oil = nullptr;
+	}
+
+	for (Checkpoint* checkpoint : checkpoints) {
+		delete checkpoint;
+	}
+	checkpoints.clear();
+
+	if (ui != nullptr)
+	{
+		delete ui;
+		ui = nullptr;
+	}
+
+	if (trafficLight != nullptr)
+	{
+		delete trafficLight;
+		trafficLight = nullptr;
+	}
+
     return true;
 }
 
@@ -97,7 +122,8 @@ update_status ModuleGame::Update()
 
 
     case GameState::START_MENU:
-        DrawTexture(menu, 0, 0, WHITE);
+
+        menuManager->DrawMainMenu();
 		
         if (IsKeyPressed(KEY_ENTER))
         {
@@ -108,49 +134,39 @@ update_status ModuleGame::Update()
         }
         break;
     case GameState::SELECT_CHARACTER_MENU:
-
-        DrawTexture(character1Texture, GetScreenWidth() / 2 - 200, GetScreenHeight() / 2 - character1Texture.height / 2, WHITE);
-        DrawTexture(character2Texture, GetScreenWidth() / 2 + 100, GetScreenHeight() / 2 - character2Texture.height / 2, WHITE);
-
-        if (selectedCharacter == 0) {
-            DrawRectangleLines(GetScreenWidth() / 2 - 210, GetScreenHeight() / 2 - character1Texture.height / 2 - 10,
-                character1Texture.width + 20, character1Texture.height + 20, YELLOW);
-        }
-        else {
-            DrawRectangleLines(GetScreenWidth() / 2 + 90, GetScreenHeight() / 2 - character2Texture.height / 2 - 10,
-                character2Texture.width + 20, character2Texture.height + 20, YELLOW);
-        }
+        menuManager->DrawCharacterSelectMenu(selectedCharacter); 
 
         if (IsKeyPressed(KEY_RIGHT)) selectedCharacter = 1;
         if (IsKeyPressed(KEY_LEFT)) selectedCharacter = 0;
 
         if (IsKeyPressed(KEY_ENTER)) {
             
-            Texture2D playerTexture = (selectedCharacter == 0) ? character1Texture : character2Texture;
-            Texture2D aiTexture = (selectedCharacter == 0) ? character2Texture : character1Texture;
+            Texture2D carTexture = (selectedCharacter == 0) ? menuManager->GetCharacter1Texture() : menuManager->GetCharacter2Texture();
+            car1 = new Car(App->physics, 400, 130, this, carTexture);
 
-           
-            car1 = new Car(App->physics, 400, 130, this, playerTexture);
-          //aiCar = new AICar(App->physics, 400, 100, this, aiTexture);
-          //
-          //
-          //waypoints = {
-          //    {440, 115},
-          //    {640, 115},
-          //    {840, 115},
-          //    {1030, 133},
-          //    {1040, 180},
-          //    {750, 303},
-          //    {550, 600},
-          //    {235, 340}
-          //};
-          //aiCar->SetWaypoints(waypoints);
-          
-            //PlaySound(el que sea);
-            game_state = GameState::PLAYING;
+            game_state = GameState::SELECT_MAP_MENU;
         }
         break;
 
+    case GameState::SELECT_MAP_MENU:
+
+        menuManager->DrawMapSelectMenu(selectedMap); 
+
+        if (IsKeyPressed(KEY_RIGHT)) selectedMap = 1;
+        if (IsKeyPressed(KEY_LEFT)) selectedMap = 0;
+
+        if (IsKeyPressed(KEY_ENTER)) {
+            App->map->SetMapTexture((selectedMap == 0) ? menuManager->GetMap1Full() : menuManager->GetMap2Full());
+            iceMap = (selectedMap == 1);
+
+            if (car1 != nullptr) {
+                car1->SetIceMap(iceMap);
+            }
+
+            game_state = GameState::PLAYING;
+        }
+        break;
+        
     case GameState::PLAYING:
 
         //PlayMusicStream(musica de fondo);
@@ -161,13 +177,8 @@ update_status ModuleGame::Update()
 
         }
 
-        for (const Waypoint& wp : waypoints) {
-            DrawCircle(wp.x, wp.y, 10, BLACK); 
-        }
-
-
         car1->Draw();
-      //  aiCar->Draw();
+    
 
 
         trafficLight->Update();
@@ -190,17 +201,11 @@ update_status ModuleGame::Update()
             car1->Update();
             car1->Draw();
 
-         //   aiCar->Update(waypoints);
-         //   aiCar->Draw();
 
             App->particleSystem->Update();
             UpdateLapTime();
             ui->Update(currentLapTime, bestLapTime, lapsCompleted);
             ui->Draw();
-
-            for (const Waypoint& wp : waypoints) {
-                DrawCircle(wp.x, wp.y, 10, BLACK); // Dibuja un círculo negro en cada waypoint esto esta para hacer debug luego se quita
-            }
 
 
             if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
@@ -244,7 +249,8 @@ update_status ModuleGame::Update()
         break;
 
     case GameState::PAUSED:
-        DrawTexture(pausemenu, 0, 0, WHITE);
+        menuManager->DrawPauseMenu();
+
         if (IsKeyPressed(KEY_Q)) {
 
 			//PlaySound(el que sea);
@@ -260,7 +266,7 @@ update_status ModuleGame::Update()
     {
         
         //PlaySound(el que sea);
-        DrawTexture(game_over_menu, 0, 0, WHITE);
+		menuManager->DrawGameOverMenu();
 
     }
     return UPDATE_CONTINUE;

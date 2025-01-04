@@ -22,6 +22,8 @@ public:
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 
+	void SetMapTexture(Texture2D texture);
+
 
 
 private:

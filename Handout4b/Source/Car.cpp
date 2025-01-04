@@ -91,7 +91,7 @@ void Car::Update()
 
     float angularVelocity = body->body->GetAngularVelocity();
     if (fabs(angularVelocity) > 0.001f) {
-        float angularFriction = 0.1f;
+         float angularFriction = 0.1f;
         float newAngularVelocity = angularVelocity - angularFriction * angularVelocity * (1.0f / 60.0f);
 
         if (fabs(newAngularVelocity) < 0.001f) {
@@ -169,8 +169,8 @@ void Car::Turn(float direction, bool isTurning)
 {
     if (isSpinning) return;
 
-    const float maxAngularVelocity = 3.5f;
-    const float angularFriction = 0.2f;
+    const float maxAngularVelocity = iceMap ? 2.8f : 3.5f; 
+    const float angularFriction = iceMap ? 0.08f : 0.2f;
 
     if (isTurning)
     {
@@ -230,6 +230,11 @@ void Car::ApplyBoost(float boostFactor) {
     b2Vec2 currentVelocity = body->body->GetLinearVelocity();
 	b2Vec2 boost = b2Vec2(direction.x * boostFactor, direction.y * boostFactor);
     body->body->SetLinearVelocity(currentVelocity + boost);
+}
+
+void Car::SetIceMap(bool isIceMap)
+{
+	iceMap = isIceMap;
 }
 
 
