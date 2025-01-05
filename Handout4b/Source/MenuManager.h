@@ -39,6 +39,9 @@ public:
 	Texture2D map1Full;
 	Texture2D map2Full;
 
+	Texture2D map1Background;
+	Texture2D map2Background;
+
 	Texture2D character1Texture;
 	Texture2D character2Texture;
 };
