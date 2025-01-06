@@ -25,6 +25,8 @@ void MenuManager::LoadAssets() {
     map2Preview = LoadTexture("Assets/map2_preview.png");
     map1Full = LoadTexture("Assets/map2.png");
     map2Full = LoadTexture("Assets/map_hielo.png");
+	map1Background = LoadTexture("Assets/map1_fondo.png");
+	map2Background = LoadTexture("Assets/map2_fondo.png");
 
 	map1Background = LoadTexture("Assets/Map1_fondo.png");
 	map2Background = LoadTexture("Assets/Map2_fondo.png");
@@ -38,6 +40,7 @@ void MenuManager::DrawMainMenu() {
 }
 
 void MenuManager::DrawCharacterSelectMenu(int selectedCharacter) {
+
     DrawTexture(character1Texture, GetScreenWidth() / 2 - 200, GetScreenHeight() / 2 - character1Texture.height / 2, WHITE);
     DrawTexture(character2Texture, GetScreenWidth() / 2 + 100, GetScreenHeight() / 2 - character2Texture.height / 2, WHITE);
 
@@ -52,19 +55,28 @@ void MenuManager::DrawCharacterSelectMenu(int selectedCharacter) {
 }
 
 void MenuManager::DrawMapSelectMenu(int selectedMap) {
-    DrawTexture(map1Preview, GetScreenWidth() / 2 - 400, GetScreenHeight() / 2 - map1Preview.height / 2, WHITE);
-    DrawTexture(map2Preview, GetScreenWidth() / 2 + 100, GetScreenHeight() / 2 - map2Preview.height / 2, WHITE);
 
+    
     if (selectedMap == 0) {
+
+		DrawTexture(map1Background, 0, 0, WHITE);
+
         DrawRectangleLines(GetScreenWidth() / 2 - 410, GetScreenHeight() / 2 - map1Preview.height / 2 - 10,
             map1Preview.width + 20, map1Preview.height + 20, YELLOW);
         DrawTexture(map1Background, 0, 0, WHITE);
     }
     else {
+
+		DrawTexture(map2Background, 0, 0, WHITE);
+
         DrawRectangleLines(GetScreenWidth() / 2 + 90, GetScreenHeight() / 2 - map2Preview.height / 2 - 10,
             map2Preview.width + 20, map2Preview.height + 20, YELLOW);
         DrawTexture(map2Background, 0, 0, WHITE);
     }
+
+    DrawTexture(map1Preview, GetScreenWidth() / 2 - 400, GetScreenHeight() / 2 - map1Preview.height / 2, WHITE);
+    DrawTexture(map2Preview, GetScreenWidth() / 2 + 100, GetScreenHeight() / 2 - map2Preview.height / 2, WHITE);
+
 }
 
 void MenuManager::DrawPauseMenu() {

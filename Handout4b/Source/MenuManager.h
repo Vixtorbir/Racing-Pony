@@ -38,6 +38,8 @@ public:
 	Texture2D map2Preview;
 	Texture2D map1Full;
 	Texture2D map2Full;
+	Texture2D map1Background;
+	Texture2D map2Background;
 
 	Texture2D map1Background;
 	Texture2D map2Background;
