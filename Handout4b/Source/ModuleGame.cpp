@@ -48,6 +48,7 @@ bool ModuleGame::Start()
     oil_fx = LoadSound("Assets/music/oil_sfx.wav");
 
 	playingMusic = LoadMusicStream("Assets/music/Playing_Music.wav");
+    PlayMusicStream(playingMusic);
 
     ResetCheckpoints();
     lapsCompleted = 0;
@@ -127,8 +128,6 @@ update_status ModuleGame::Update()
     case GameState::START_MENU:
 
         menuManager->DrawMainMenu();
-
-        PauseMusicStream(playingMusic);
 		
         if (IsKeyPressed(KEY_ENTER))
         {
@@ -138,10 +137,10 @@ update_status ModuleGame::Update()
 
         }
         break;
-    case GameState::SELECT_CHARACTER_MENU:
-        menuManager->DrawCharacterSelectMenu(selectedCharacter); 
 
-        PauseMusicStream(playingMusic);
+    case GameState::SELECT_CHARACTER_MENU:
+
+        menuManager->DrawCharacterSelectMenu(selectedCharacter); 
 
         if (IsKeyPressed(KEY_RIGHT)) selectedCharacter = 1;
         if (IsKeyPressed(KEY_LEFT)) selectedCharacter = 0;
@@ -158,8 +157,6 @@ update_status ModuleGame::Update()
     case GameState::SELECT_MAP_MENU:
 
         menuManager->DrawMapSelectMenu(selectedMap); 
-
-        PauseMusicStream(playingMusic);
 
         if (IsKeyPressed(KEY_RIGHT)) selectedMap = 1;
         if (IsKeyPressed(KEY_LEFT)) selectedMap = 0;
@@ -179,7 +176,7 @@ update_status ModuleGame::Update()
     case GameState::PLAYING:
 
         //PlayMusicStream(musica de fondo);
-        PlayMusicStream(playingMusic);
+        SetMusicVolume(playingMusic, 0.15f);
 
         if (IsKeyPressed(KEY_Q)) {
 
@@ -269,6 +266,8 @@ update_status ModuleGame::Update()
 
 			//PlaySound(el que sea);
             game_state = GameState::PLAYING;
+
+            PlayMusicStream(playingMusic);
 
         }
         break;
