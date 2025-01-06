@@ -47,6 +47,9 @@ bool ModuleGame::Start()
     car_fx = LoadSound("Assets/music/car_sfx.wav");
     oil_fx = LoadSound("Assets/music/oil_sfx.wav");
 
+	menuMusic = LoadMusicStream("Assets/music/Menu_Music.wav");
+    PlayMusicStream(menuMusic);
+
     ResetCheckpoints();
     lapsCompleted = 0;
 
@@ -117,6 +120,8 @@ update_status ModuleGame::Update()
         ray.y = GetMouseY();
     }
 
+    UpdateMusicStream(menuMusic);
+
 
     switch (game_state) {
 
@@ -168,6 +173,8 @@ update_status ModuleGame::Update()
         break;
         
     case GameState::PLAYING:
+
+        PauseMusicStream(menuMusic);
 
         //PlayMusicStream(musica de fondo);
         if (IsKeyPressed(KEY_Q)) {
@@ -249,6 +256,9 @@ update_status ModuleGame::Update()
         break;
 
     case GameState::PAUSED:
+
+        PauseMusicStream(menuMusic);
+
         menuManager->DrawPauseMenu();
 
         if (IsKeyPressed(KEY_Q)) {

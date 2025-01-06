@@ -69,6 +69,8 @@ public:
 	Sound car_fx;
 	Sound oil_fx;
 
+	Music menuMusic;
+
 	vec2<int> ray;
 	bool ray_on;
 
