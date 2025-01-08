@@ -19,6 +19,7 @@ public:
 	void DrawGameModeSelectionMenu(int selectedMode);
 	void DrawPauseMenu();
 	void DrawGameOverMenu();
+	void DrawWinMenu();
 	void CleanUp();
 
 	Texture2D GetCharacter1Texture() const;

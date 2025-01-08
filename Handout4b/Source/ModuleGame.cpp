@@ -54,6 +54,7 @@ bool ModuleGame::Start()
 
 	playingMusic = LoadMusicStream("Assets/music/Playing_Music.wav");
     PlayMusicStream(playingMusic);
+    SetMusicVolume(playingMusic, 0.03f);
 
     ResetCheckpoints();
     lapsCompleted = 0;
@@ -118,6 +119,14 @@ bool ModuleGame::CleanUp()
 
 update_status ModuleGame::Update()
 {
+    if (IsKeyPressed(KEY_P)) {
+
+        lapsCompleted == 5;
+    }
+    if (lapsCompleted >= totalLaps) {
+        LOG("Juego completado");
+        game_state = GameState::WIN;
+    }
     if (IsKeyPressed(KEY_R))
     {
         ray_on = !ray_on;
@@ -133,7 +142,7 @@ update_status ModuleGame::Update()
     case GameState::START_MENU:
 
         menuManager->DrawMainMenu();
-		
+
         if (IsKeyPressed(KEY_ENTER))
         {
             //PlaySound(el que sea);
@@ -145,13 +154,13 @@ update_status ModuleGame::Update()
 
     case GameState::SELECT_CHARACTER_MENU:
 
-        menuManager->DrawCharacterSelectMenu(selectedCharacter); 
+        menuManager->DrawCharacterSelectMenu(selectedCharacter);
 
         if (IsKeyPressed(KEY_RIGHT)) selectedCharacter = 1;
         if (IsKeyPressed(KEY_LEFT)) selectedCharacter = 0;
 
         if (IsKeyPressed(KEY_ENTER)) {
-            
+
             Texture2D carTexture = (selectedCharacter == 0) ? menuManager->GetCharacter1Texture() : menuManager->GetCharacter2Texture();
             car1 = new Car(App->physics, 400, 130, this, carTexture);
 
@@ -161,7 +170,7 @@ update_status ModuleGame::Update()
 
     case GameState::SELECT_MAP_MENU:
 
-        menuManager->DrawMapSelectMenu(selectedMap); 
+        menuManager->DrawMapSelectMenu(selectedMap);
 
         if (IsKeyPressed(KEY_RIGHT)) selectedMap = 1;
         if (IsKeyPressed(KEY_LEFT)) selectedMap = 0;
@@ -177,7 +186,7 @@ update_status ModuleGame::Update()
             game_state = GameState::SELECT_GAME_MODE;
         }
         break;
-        
+
     case GameState::SELECT_GAME_MODE:
 
         menuManager->DrawGameModeSelectionMenu(selectedMode);
@@ -198,7 +207,7 @@ update_status ModuleGame::Update()
                 game_state = GameState::PLAYING;
 
             }
-       
+
             if (selectedMode == 1) {
                 App->map->SetMapTexture((selectedMap == 0) ? menuManager->GetMap1Full() : menuManager->GetMap2Full());
                 iceMap = (selectedMap == 1);
@@ -208,17 +217,17 @@ update_status ModuleGame::Update()
                 }
                 game_state = GameState::INTRO_REDGREEN;
             }
-           
+
         }
 
         break;
-   case GameState::INTRO_REDGREEN:
-            menuManager->DrawPauseMenu();
-            if (IsKeyPressed(KEY_ENTER)) {
+    case GameState::INTRO_REDGREEN:
+        menuManager->DrawPauseMenu();
+        if (IsKeyPressed(KEY_ENTER)) {
 
-                game_state = GameState::PLAYING_REDGREEN;
+            game_state = GameState::PLAYING_REDGREEN;
 
-            }
+        }
 
 
         break;
@@ -235,21 +244,21 @@ update_status ModuleGame::Update()
         }
 
         car1->Draw();
-    
 
-        
+
+
         trafficLight->Update();
 
         if (!trafficLight->IsCountdownFinished()) {
             trafficLight->Draw();
-            return UPDATE_CONTINUE; 
+            return UPDATE_CONTINUE;
         }
         else if (!canControlCar) {
             canControlCar = true;
-            lapStartTime = GetTime(); 
+            lapStartTime = GetTime();
         }
 
-        if (canControlCar) 
+        if (canControlCar)
         {
             App->map->Update();
             nitro->Update();
@@ -268,7 +277,7 @@ update_status ModuleGame::Update()
             if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
             {
                 car1->Accelerate();
-                
+
             }
 
             if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S))
@@ -305,7 +314,7 @@ update_status ModuleGame::Update()
 
         break;
     case GameState::PLAYING_REDGREEN:
-        
+
         //PlayMusicStream(musica de fondo);
         SetMusicVolume(playingMusic, 0.07f);
 
@@ -319,7 +328,7 @@ update_status ModuleGame::Update()
         car1->Draw();
 
 
-       
+
         trafficLight->Update();
 
         if (!trafficLight->IsCountdownFinished()) {
@@ -429,7 +438,7 @@ update_status ModuleGame::Update()
                 }
             }
         }
-    break;
+        break;
 
 
 
@@ -439,9 +448,9 @@ update_status ModuleGame::Update()
 
         PauseMusicStream(playingMusic);
 
-        if (IsKeyPressed(KEY_Q)) {
+        if (IsKeyPressed(KEY_ENTER)) {
 
-			//PlaySound(el que sea);
+            //PlaySound(el que sea);
             game_state = GameState::PLAYING;
 
             PlayMusicStream(playingMusic);
@@ -449,9 +458,18 @@ update_status ModuleGame::Update()
         }
         break;
 
+
+    case GameState::WIN:
+
+        menuManager->DrawWinMenu();
+
+        if (IsKeyPressed(KEY_ENTER)) {
+
+
+            game_state = GameState::START_MENU;
+        }
+        break;
     }
-
-
     if (game_state == GameState::GAME_OVER)
     {
         
