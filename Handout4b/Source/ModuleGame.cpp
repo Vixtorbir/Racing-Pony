@@ -46,6 +46,7 @@ bool ModuleGame::Start()
     bonus_fx= LoadSound("Assets/music/bonus_sfx.wav");
     car_fx = LoadSound("Assets/music/car_sfx.wav");
     oil_fx = LoadSound("Assets/music/oil_sfx.wav");
+    finish_line_fx = LoadSound("Assets/music/bonus_sfx.wav");
 
 	playingMusic = LoadMusicStream("Assets/music/Playing_Music.wav");
     PlayMusicStream(playingMusic);
@@ -312,10 +313,14 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
                         lapStartTime = GetTime();
 
                         lapsCompleted++;
-                        //PlaySound(el que sea);
+                        PlaySound(finish_line_fx);
                         ResetCheckpoints();
                         LOG("Lap completed! Total laps: %d", lapsCompleted);
                         LOG("Current lap time: %.2f seconds", currentLapTime);
+                        if (lapsCompleted >= totalLaps) {
+                            LOG("Juego completado");
+                            game_state = GameState::GAME_OVER;
+                        }
                     }
 
                     checkpoint->isActive = true;
