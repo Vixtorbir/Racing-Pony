@@ -50,7 +50,7 @@ public:
 	std::vector<Checkpoint*> checkpoints; 
 	int currentCheckpointIndex;
 
-	int totalLaps = 3;
+	int totalLaps = 6;
 	int lapsCompleted = 0;
 	float lapStartTime = 0.0f;
 	float currentLapTime = 0.0f;

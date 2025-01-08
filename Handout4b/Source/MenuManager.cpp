@@ -29,7 +29,7 @@ void MenuManager::LoadAssets() {
 	map1Background = LoadTexture("Assets/Map1_fondo.png");
 	map2Background = LoadTexture("Assets/Map2_fondo.png");
 
-    character1Texture = LoadTexture("Assets/CarUsable.png");
+    character1Texture = LoadTexture("Assets/Car.png");
     character2Texture = LoadTexture("Assets/Car2.png");
 }
 
