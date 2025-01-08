@@ -37,6 +37,9 @@ bool ModuleGame::Start()
 
 	oil = new OilSlick(App->physics->CreateCircleSensor(400, 580, 15), LoadTexture("Assets/stain.png"), this);
 
+    green_light = LoadTexture("Assets/GREENLIGHT.png");
+    red_light = LoadTexture("Assets/REDLIGHT.png");
+ 
     checkpoints.push_back(new Checkpoint(App->physics->CreateRectangleSensor(440, 115, 10, 90), 0));
     checkpoints.push_back(new Checkpoint(App->physics->CreateRectangleSensor(750, 433, 10, 80), 1));
     checkpoints.push_back(new Checkpoint(App->physics->CreateRectangleSensor(550, 600, 10, 90), 2));
@@ -47,7 +50,7 @@ bool ModuleGame::Start()
     car_fx = LoadSound("Assets/music/car_sfx.wav");
     oil_fx = LoadSound("Assets/music/oil_sfx.wav");
     finish_line_fx = LoadSound("Assets/music/bonus_sfx.wav");
-    red_light = LoadSound("Assets/music/REDLIGHT.wav");
+    red_light_fx = LoadSound("Assets/music/REDLIGHT.wav");
 
 	playingMusic = LoadMusicStream("Assets/music/Playing_Music.wav");
     PlayMusicStream(playingMusic);
@@ -203,11 +206,19 @@ update_status ModuleGame::Update()
                 if (car1 != nullptr) {
                     car1->SetIceMap(iceMap);
                 }
-                game_state = GameState::PLAYING_REDGREEN;
+                game_state = GameState::INTRO_REDGREEN;
             }
            
         }
 
+        break;
+   case GameState::INTRO_REDGREEN:
+            menuManager->DrawPauseMenu();
+            if (IsKeyPressed(KEY_ENTER)) {
+
+                game_state = GameState::PLAYING_REDGREEN;
+
+            }
 
 
         break;
@@ -226,7 +237,7 @@ update_status ModuleGame::Update()
         car1->Draw();
     
 
-
+        
         trafficLight->Update();
 
         if (!trafficLight->IsCountdownFinished()) {
@@ -296,7 +307,7 @@ update_status ModuleGame::Update()
     case GameState::PLAYING_REDGREEN:
         
         //PlayMusicStream(musica de fondo);
-        SetMusicVolume(playingMusic, 0.15f);
+        SetMusicVolume(playingMusic, 0.07f);
 
         if (IsKeyPressed(KEY_Q)) {
 
@@ -308,7 +319,7 @@ update_status ModuleGame::Update()
         car1->Draw();
 
 
-
+       
         trafficLight->Update();
 
         if (!trafficLight->IsCountdownFinished()) {
@@ -383,7 +394,7 @@ update_status ModuleGame::Update()
 
             // Ensure the initial green light sound plays once
             if (!isRedLight && !initialSoundPlayed) {
-                PlaySound(red_light); // Replace with your green light sound
+                PlaySound(red_light_fx); // Replace with your green light sound
                 initialSoundPlayed = true;
             }
 
@@ -393,17 +404,17 @@ update_status ModuleGame::Update()
                 lastToggleTime = GetTime();
 
                 if (!isRedLight) {
-                    PlaySound(red_light); // Replace with your red light sound
+                    PlaySound(red_light_fx); // Replace with your red light sound
                 }
 
             }
 
             // Display traffic light status
             if (isRedLight) {
-                DrawText("RED LIGHT!", 10, 10, 30, RED);
+                DrawTexture(red_light, 0, 0, WHITE);
             }
             else {
-                DrawText("GREEN LIGHT!", 10, 10, 30, GREEN);
+                DrawTexture(green_light, 0, 0, WHITE);
             }
 
             // Movement detection during red light

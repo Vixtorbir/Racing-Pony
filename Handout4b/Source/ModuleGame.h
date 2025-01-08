@@ -30,7 +30,8 @@ enum class GameState
 	SELECT_CHARACTER_MENU,
 	SELECT_MAP_MENU,
 	SELECT_GAME_MODE,
-	PLAYING_REDGREEN
+	PLAYING_REDGREEN,
+	INTRO_REDGREEN
 
 
 };
@@ -72,8 +73,10 @@ public:
 	Sound car_fx;
 	Sound oil_fx;
 	Sound finish_line_fx;
-	Sound red_light;
+	Sound red_light_fx;
 
+	Texture2D green_light;
+	Texture2D red_light;
 	Music playingMusic;
 
 	vec2<int> ray;
