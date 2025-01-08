@@ -51,6 +51,7 @@ bool ModuleGame::Start()
     oil_fx = LoadSound("Assets/music/oil_sfx.wav");
     finish_line_fx = LoadSound("Assets/music/bonus_sfx.wav");
     red_light_fx = LoadSound("Assets/music/REDLIGHT.wav");
+    victory_fx = LoadSound("Assets/music/victory.wav");
 
 	playingMusic = LoadMusicStream("Assets/music/Playing_Music.wav");
     PlayMusicStream(playingMusic);
@@ -463,10 +464,14 @@ update_status ModuleGame::Update()
 
         menuManager->DrawWinMenu();
 
-        if (IsKeyPressed(KEY_ENTER)) {
-
-
-            game_state = GameState::START_MENU;
+        if (IsKeyPressed(KEY_LEFT_SHIFT)) {
+                lapsCompleted = 0;
+                currentLapTime = 0.0f;
+                bestLapTime = FLT_MAX;
+                ResetCheckpoints();
+                StopSound(victory_fx); 
+                PlayMusicStream(playingMusic);
+                game_state = GameState::START_MENU;
         }
         break;
     }
@@ -514,8 +519,11 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
                         LOG("Lap completed! Total laps: %d", lapsCompleted);
                         LOG("Current lap time: %.2f seconds", currentLapTime);
                         if (lapsCompleted >= totalLaps) {
-                            LOG("Juego completado");
+                            PauseMusicStream(playingMusic);
+                            PlaySound(victory_fx); 
                             game_state = GameState::WIN;
+                            LOG("WIN Active");
+
                         }
                     }
 
