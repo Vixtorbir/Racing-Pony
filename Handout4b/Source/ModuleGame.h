@@ -71,6 +71,7 @@ public:
 	Sound bonus_fx;
 	Sound car_fx;
 	Sound oil_fx;
+	Sound finish_line_fx;
 
 	Music playingMusic;
 
