@@ -497,7 +497,7 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
                         LOG("Current lap time: %.2f seconds", currentLapTime);
                         if (lapsCompleted >= totalLaps) {
                             LOG("Juego completado");
-                            game_state = GameState::GAME_OVER;
+                            game_state = GameState::WIN;
                         }
                     }
 

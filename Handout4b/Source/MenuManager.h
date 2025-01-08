@@ -34,6 +34,7 @@ public:
 	Texture2D mainMenuTexture;
 	Texture2D pauseMenuTexture;
 	Texture2D gameOverMenuTexture;
+	Texture2D Win;
 
 	Texture2D map1Preview;
 	Texture2D map2Preview;
