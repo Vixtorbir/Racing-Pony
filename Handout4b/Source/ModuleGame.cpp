@@ -47,6 +47,7 @@ bool ModuleGame::Start()
     car_fx = LoadSound("Assets/music/car_sfx.wav");
     oil_fx = LoadSound("Assets/music/oil_sfx.wav");
     finish_line_fx = LoadSound("Assets/music/bonus_sfx.wav");
+    red_light = LoadSound("Assets/music/REDLIGHT.wav");
 
 	playingMusic = LoadMusicStream("Assets/music/Playing_Music.wav");
     PlayMusicStream(playingMusic);
@@ -321,6 +322,7 @@ update_status ModuleGame::Update()
 
         if (canControlCar)
         {
+
             App->map->Update();
             nitro->Update();
             nitro->Draw();
@@ -374,16 +376,26 @@ update_status ModuleGame::Update()
 
             //RedLightGreenLight
 
-            static bool isRedLight = false;         // Is it currently a red light?
-            static float lastToggleTime = GetTime(); // Time when the light last toggled
-            const float toggleInterval = 5.0f;      // Time between light toggles (5 seconds)
+            static bool isRedLight = false;
+            static bool initialSoundPlayed = false; // Tracks if the initial sound has been played
+            static float lastToggleTime = GetTime();
+            const float toggleInterval = 5.0f;
+
+            // Ensure the initial green light sound plays once
+            if (!isRedLight && !initialSoundPlayed) {
+                PlaySound(red_light); // Replace with your green light sound
+                initialSoundPlayed = true;
+            }
 
             // Toggle traffic light based on time
             if (GetTime() - lastToggleTime >= toggleInterval) {
                 isRedLight = !isRedLight; // Switch light state
                 lastToggleTime = GetTime();
 
-             
+                if (!isRedLight) {
+                    PlaySound(red_light); // Replace with your red light sound
+                }
+
             }
 
             // Display traffic light status
@@ -402,16 +414,10 @@ update_status ModuleGame::Update()
                     IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D) ||
                     IsKeyDown(KEY_SPACE)) {
                     // Penalize the player for moving during red light
-
-                    
                     game_state = GameState::GAME_OVER;
-                    
                 }
-
-                
             }
         }
-       
     break;
 
 
@@ -443,6 +449,8 @@ update_status ModuleGame::Update()
 
     }
     return UPDATE_CONTINUE;
+
+
 }
 
 
