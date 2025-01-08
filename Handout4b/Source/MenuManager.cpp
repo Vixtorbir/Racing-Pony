@@ -19,7 +19,7 @@ void MenuManager::LoadAssets() {
 
     mainMenuTexture = LoadTexture("Assets/menuprincipal.png");
     pauseMenuTexture = LoadTexture("Assets/pausemenu.png");
-    gameOverMenuTexture = LoadTexture("Assets/pausemenu.png");
+    gameOverMenuTexture = LoadTexture("Assets/gameover.png");
 
     map1Preview = LoadTexture("Assets/map1_preview.png");
     map2Preview = LoadTexture("Assets/map2_preview.png");
