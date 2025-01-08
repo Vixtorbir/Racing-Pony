@@ -19,7 +19,7 @@ void MenuManager::LoadAssets() {
 
     mainMenuTexture = LoadTexture("Assets/menuprincipal.png");
     pauseMenuTexture = LoadTexture("Assets/pausemenu.png");
-    gameOverMenuTexture = LoadTexture("Assets/gameovermenu.png");
+    gameOverMenuTexture = LoadTexture("Assets/pausemenu.png");
 
     map1Preview = LoadTexture("Assets/map1_preview.png");
     map2Preview = LoadTexture("Assets/map2_preview.png");
@@ -31,6 +31,9 @@ void MenuManager::LoadAssets() {
 
     character1Texture = LoadTexture("Assets/Car.png");
     character2Texture = LoadTexture("Assets/Car2.png");
+
+    NormalMode = LoadTexture("Assets/normalmode.png");
+    GreenRedMode = LoadTexture("Assets/greenredmode.png");
 }
 
 void MenuManager::DrawMainMenu() {
@@ -77,6 +80,31 @@ void MenuManager::DrawMapSelectMenu(int selectedMap) {
         DrawRectangleLines(GetScreenWidth() / 2 + 90, GetScreenHeight() / 2 - map2Preview.height / 2 - 10,
             map2Preview.width + 20, map2Preview.height + 20, YELLOW);
     }
+}
+
+void MenuManager::DrawGameModeSelectionMenu(int selectedMode)
+{
+    DrawTexture(NormalMode, GetScreenWidth() / 2 - 400, GetScreenHeight() / 2 - map1Preview.height / 2, WHITE);
+    DrawTexture(GreenRedMode, GetScreenWidth() / 2 + 100, GetScreenHeight() / 2 - map2Preview.height / 2, WHITE);
+    if (selectedMode == 0) {
+
+
+        DrawTexture(NormalMode, GetScreenWidth() / 2 - 400, GetScreenHeight() / 2 - map1Preview.height / 2, WHITE);
+        DrawTexture(GreenRedMode, GetScreenWidth() / 2 + 100, GetScreenHeight() / 2 - map2Preview.height / 2, WHITE);
+
+        DrawRectangleLines(GetScreenWidth() / 2 - 410, GetScreenHeight() / 2 - map1Preview.height / 2 - 10,
+            map1Preview.width + 20, map1Preview.height + 20, YELLOW);
+    }
+    else if(selectedMode == 1) {
+
+
+        DrawTexture(NormalMode, GetScreenWidth() / 2 - 400, GetScreenHeight() / 2 - map1Preview.height / 2, WHITE);
+        DrawTexture(GreenRedMode, GetScreenWidth() / 2 + 100, GetScreenHeight() / 2 - map2Preview.height / 2, WHITE);
+
+        DrawRectangleLines(GetScreenWidth() / 2 + 90, GetScreenHeight() / 2 - map2Preview.height / 2 - 10,
+            map2Preview.width + 20, map2Preview.height + 20, YELLOW);
+    }
+
 }
 
 void MenuManager::DrawPauseMenu() {

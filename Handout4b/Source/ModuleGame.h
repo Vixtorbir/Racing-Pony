@@ -28,7 +28,10 @@ enum class GameState
 	PAUSED,
 	START_MENU,
 	SELECT_CHARACTER_MENU,
-	SELECT_MAP_MENU
+	SELECT_MAP_MENU,
+	SELECT_GAME_MODE,
+	PLAYING_REDGREEN
+
 
 };
 
@@ -79,6 +82,7 @@ public:
 
 	int selectedCharacter = 0;
 	int selectedMap = 0;    
+	int selectedMode = 0;
 	bool iceMap = false;
 
 	MenuManager* menuManager;

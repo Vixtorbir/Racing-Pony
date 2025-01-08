@@ -169,10 +169,46 @@ update_status ModuleGame::Update()
                 car1->SetIceMap(iceMap);
             }
 
-            game_state = GameState::PLAYING;
+            game_state = GameState::SELECT_GAME_MODE;
         }
         break;
         
+    case GameState::SELECT_GAME_MODE:
+
+        menuManager->DrawGameModeSelectionMenu(selectedMode);
+
+        if (IsKeyPressed(KEY_RIGHT)) selectedMode = 1;
+        if (IsKeyPressed(KEY_LEFT)) selectedMode = 0;
+
+        if (IsKeyPressed(KEY_ENTER)) {
+
+            if (selectedMode == 0) {
+
+                App->map->SetMapTexture((selectedMap == 0) ? menuManager->GetMap1Full() : menuManager->GetMap2Full());
+                iceMap = (selectedMap == 1);
+
+                if (car1 != nullptr) {
+                    car1->SetIceMap(iceMap);
+                }
+                game_state = GameState::PLAYING;
+
+            }
+       
+            if (selectedMode == 1) {
+                App->map->SetMapTexture((selectedMap == 0) ? menuManager->GetMap1Full() : menuManager->GetMap2Full());
+                iceMap = (selectedMap == 1);
+
+                if (car1 != nullptr) {
+                    car1->SetIceMap(iceMap);
+                }
+                game_state = GameState::PLAYING_REDGREEN;
+            }
+           
+        }
+
+
+
+        break;
     case GameState::PLAYING:
 
         //PlayMusicStream(musica de fondo);
@@ -255,6 +291,129 @@ update_status ModuleGame::Update()
         }
 
         break;
+    case GameState::PLAYING_REDGREEN:
+        
+        //PlayMusicStream(musica de fondo);
+        SetMusicVolume(playingMusic, 0.15f);
+
+        if (IsKeyPressed(KEY_Q)) {
+
+            //PlaySound(el que sea);
+            game_state = GameState::PAUSED;
+
+        }
+
+        car1->Draw();
+
+
+
+        trafficLight->Update();
+
+        if (!trafficLight->IsCountdownFinished()) {
+            trafficLight->Draw();
+            return UPDATE_CONTINUE;
+        }
+        else if (!canControlCar) {
+            canControlCar = true;
+            lapStartTime = GetTime();
+        }
+
+        if (canControlCar)
+        {
+            App->map->Update();
+            nitro->Update();
+            nitro->Draw();
+            oil->Draw();
+            car1->Update();
+            car1->Draw();
+
+
+            App->particleSystem->Update();
+            UpdateLapTime();
+            ui->Update(currentLapTime, bestLapTime, lapsCompleted);
+            ui->Draw();
+
+
+            if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
+            {
+                car1->Accelerate();
+
+            }
+
+            if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S))
+            {
+                car1->Brake();
+
+            }
+
+            if (IsKeyDown(KEY_SPACE))
+            {
+                car1->Nitro();
+            }
+
+            if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
+            {
+                car1->Turn(-1, true);
+            }
+            else if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
+            {
+                car1->Turn(1, true);
+            }
+            else
+            {
+                car1->Turn(0, false);
+            }
+
+            if (car1->isSpinning) {
+                float progress = car1->spinningTimeLeft / car1->spinningDuration;
+
+                DrawRectangle(10, 10, 200 * progress, 20, RED);
+                DrawText("Derrapando!", 10, 40, 20, WHITE);
+            }
+
+            //RedLightGreenLight
+
+            static bool isRedLight = false;         // Is it currently a red light?
+            static float lastToggleTime = GetTime(); // Time when the light last toggled
+            const float toggleInterval = 5.0f;      // Time between light toggles (5 seconds)
+
+            // Toggle traffic light based on time
+            if (GetTime() - lastToggleTime >= toggleInterval) {
+                isRedLight = !isRedLight; // Switch light state
+                lastToggleTime = GetTime();
+
+             
+            }
+
+            // Display traffic light status
+            if (isRedLight) {
+                DrawText("RED LIGHT!", 10, 10, 30, RED);
+            }
+            else {
+                DrawText("GREEN LIGHT!", 10, 10, 30, GREEN);
+            }
+
+            // Movement detection during red light
+            if (isRedLight) {
+                if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W) ||
+                    IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S) ||
+                    IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A) ||
+                    IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D) ||
+                    IsKeyDown(KEY_SPACE)) {
+                    // Penalize the player for moving during red light
+
+                    
+                    game_state = GameState::GAME_OVER;
+                    
+                }
+
+                
+            }
+        }
+       
+    break;
+
+
 
     case GameState::PAUSED:
 

@@ -16,6 +16,7 @@ public:
 	void DrawMainMenu();
 	void DrawCharacterSelectMenu(int selectedCharacter);
 	void DrawMapSelectMenu(int selectedMap);
+	void DrawGameModeSelectionMenu(int selectedMode);
 	void DrawPauseMenu();
 	void DrawGameOverMenu();
 	void CleanUp();
@@ -38,6 +39,8 @@ public:
 	Texture2D map2Preview;
 	Texture2D map1Full;
 	Texture2D map2Full;
+	Texture2D NormalMode;
+	Texture2D GreenRedMode;
 
 	Texture2D map1Background;
 	Texture2D map2Background;
