@@ -60,7 +60,7 @@ bool ModuleGame::Start()
     ResetCheckpoints();
     lapsCompleted = 0;
 
-    ui = new UI(totalLaps,6);
+    ui = new UI(totalLaps);
 
     trafficLight = new TrafficLight();
 	trafficLight->Initialize();
@@ -261,8 +261,7 @@ update_status ModuleGame::Update()
 
         if (canControlCar)
         {
-            ui->Update(currentLapTime, bestLapTime, lapsCompleted);
-            ui->Draw();
+            
             App->map->Update();
             nitro->Update();
             nitro->Draw();
