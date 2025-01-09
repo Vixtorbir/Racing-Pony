@@ -74,6 +74,7 @@ public:
 	Sound oil_fx;
 	Sound finish_line_fx;
 	Sound red_light_fx;
+	Sound victory_fx;
 
 	Texture2D green_light;
 	Texture2D red_light;
