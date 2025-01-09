@@ -124,7 +124,7 @@ update_status ModuleGame::Update()
 
         lapsCompleted == 5;
     }
-    if (lapsCompleted >= totalLaps) {
+    if (lapsCompleted >= 1) {
         LOG("Juego completado");
 
 		if (car1 != nullptr)
@@ -478,6 +478,8 @@ update_status ModuleGame::Update()
                 ResetCheckpoints();
                 StopSound(victory_fx); 
                 PlayMusicStream(playingMusic);
+                trafficLight->StartCountdown(3.0f);
+                canControlCar = false;
                 game_state = GameState::SELECT_CHARACTER_MENU;
         }
         break;
@@ -497,6 +499,8 @@ update_status ModuleGame::Update()
             ResetCheckpoints();
             StopSound(victory_fx);
             PlayMusicStream(playingMusic);
+            trafficLight->StartCountdown(3.0f);
+            canControlCar = false;
             game_state = GameState::SELECT_CHARACTER_MENU;
         }
 
