@@ -146,7 +146,7 @@ update_status ModuleGame::Update()
 
         if (IsKeyPressed(KEY_ENTER))
         {
-            //PlaySound(el que sea);
+            
             game_state = GameState::SELECT_CHARACTER_MENU;
 
 
@@ -234,12 +234,12 @@ update_status ModuleGame::Update()
         break;
     case GameState::PLAYING:
 
-        //PlayMusicStream(musica de fondo);
+        
         SetMusicVolume(playingMusic, 0.15f);
 
         if (IsKeyPressed(KEY_Q)) {
 
-            //PlaySound(el que sea);
+            
             game_state = GameState::PAUSED;
 
         }
@@ -316,12 +316,11 @@ update_status ModuleGame::Update()
         break;
     case GameState::PLAYING_REDGREEN:
 
-        //PlayMusicStream(musica de fondo);
         SetMusicVolume(playingMusic, 0.07f);
 
         if (IsKeyPressed(KEY_Q)) {
 
-            //PlaySound(el que sea);
+            
             game_state = GameState::PAUSED;
 
         }
@@ -471,7 +470,7 @@ update_status ModuleGame::Update()
                 ResetCheckpoints();
                 StopSound(victory_fx); 
                 PlayMusicStream(playingMusic);
-                game_state = GameState::START_MENU;
+                game_state = GameState::SELECT_CHARACTER_MENU;
         }
         break;
     }
@@ -514,7 +513,7 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
                         lapStartTime = GetTime();
 
                         lapsCompleted++;
-                        PlaySound(finish_line_fx);
+                        PlaySound(finish_line_fx); //change audio bonus
                         ResetCheckpoints();
                         LOG("Lap completed! Total laps: %d", lapsCompleted);
                         LOG("Current lap time: %.2f seconds", currentLapTime);
@@ -542,7 +541,7 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
             Nitro* nitro = static_cast<Nitro*>(bodyB->entity);
             if (nitro && nitro->isAvailable()) { 
                 nitro->OnPlayerCollision(); 
-                PlaySound(bonus_fx);
+                PlaySound(bonus_fx); 
                 car1->ApplyBoost(15.0f);
 
                 b2Vec2 carPosition = car1->body->body->GetPosition();
