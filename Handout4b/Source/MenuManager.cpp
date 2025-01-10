@@ -21,7 +21,7 @@ void MenuManager::LoadAssets() {
     pauseMenuTexture = LoadTexture("Assets/pausemenu.png");
     gameOverMenuTexture = LoadTexture("Assets/gameover.png");
     Win = LoadTexture("Assets/WinScreen.png");
-
+    instructions = LoadTexture("Assets/instructions.png");
     map1Preview = LoadTexture("Assets/map1_preview.png");
     map2Preview = LoadTexture("Assets/map2_preview.png");
     map1Full = LoadTexture("Assets/map2.png");
@@ -119,6 +119,11 @@ void MenuManager::DrawGameOverMenu() {
 void MenuManager::DrawWinMenu()
 {
     DrawTexture(Win, 0, 0, WHITE);
+}
+
+void MenuManager::DrawInstructions()
+{
+    DrawTexture(instructions, 0, 0, WHITE);
 }
 
 void MenuManager::CleanUp() {

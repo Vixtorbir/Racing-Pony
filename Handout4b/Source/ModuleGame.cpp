@@ -230,7 +230,7 @@ update_status ModuleGame::Update()
 
         break;
     case GameState::INTRO_REDGREEN:
-        menuManager->DrawPauseMenu();
+        menuManager->DrawInstructions();
         if (IsKeyPressed(KEY_ENTER)) {
 
             game_state = GameState::PLAYING_REDGREEN;
@@ -323,7 +323,7 @@ update_status ModuleGame::Update()
 
         break;
     case GameState::PLAYING_REDGREEN:
-
+        redGreen = true;
         SetMusicVolume(playingMusic, 0.07f);
 
         if (IsKeyPressed(KEY_Q)) {
@@ -456,10 +456,17 @@ update_status ModuleGame::Update()
 
         PauseMusicStream(playingMusic);
 
-        if (IsKeyPressed(KEY_ENTER)) {
+        if (IsKeyPressed(KEY_ENTER)&&redGreen==false) {
 
             //PlaySound(el que sea);
             game_state = GameState::PLAYING;
+
+            PlayMusicStream(playingMusic);
+
+        }
+        else if(IsKeyPressed(KEY_ENTER) && redGreen == true) {
+
+            game_state = GameState::PLAYING_REDGREEN;
 
             PlayMusicStream(playingMusic);
 

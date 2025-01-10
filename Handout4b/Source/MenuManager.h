@@ -20,6 +20,7 @@ public:
 	void DrawPauseMenu();
 	void DrawGameOverMenu();
 	void DrawWinMenu();
+	void DrawInstructions();
 	void CleanUp();
 
 	Texture2D GetCharacter1Texture() const;
@@ -43,6 +44,7 @@ public:
 	Texture2D map2Full;
 	Texture2D NormalMode;
 	Texture2D GreenRedMode;
+	Texture2D instructions;
 
 	Texture2D map1Background;
 	Texture2D map2Background;
