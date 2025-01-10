@@ -59,6 +59,7 @@ bool ModuleGame::Start()
     finish_line_fx = LoadSound("Assets/music/finish_sfx.wav");
     red_light_fx = LoadSound("Assets/music/REDLIGHT.wav");
     victory_fx = LoadSound("Assets/music/victory.wav");
+    gameover_fx = LoadSound("Assets/music/gameover.wav");
 
     playingMusic = LoadMusicStream("Assets/music/Playing_Music.wav");
     PlayMusicStream(playingMusic);
@@ -134,6 +135,7 @@ bool ModuleGame::CleanUp()
     UnloadSound(finish_line_fx);
     UnloadSound(red_light_fx);
     UnloadSound(victory_fx);
+    UnloadSound(gameover_fx);
 
     UnloadMusicStream(playingMusic);
 
@@ -555,6 +557,8 @@ update_status ModuleGame::Update()
                     IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A) ||
                     IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D) ||
                     IsKeyDown(KEY_SPACE)) {
+                    PauseMusicStream(playingMusic);
+                    PlaySound(gameover_fx);
                     game_state = GameState::GAME_OVER;
                 }
             }

@@ -86,6 +86,7 @@ public:
 	Sound finish_line_fx;
 	Sound red_light_fx;
 	Sound victory_fx;
+	Sound gameover_fx;
 
 	Texture2D green_light;
 	Texture2D red_light;
