@@ -11,7 +11,7 @@ Zhehao Li - Link to GitHub: https://github.com/jeremy-zhehaoli
 
 ## Description
 
-Racing Pony is a racing game where players will race in a colorful world inspired by My Little Pony and will take control of the car to cross the finish line first. Can you master the track and claim victory?
+Racing Pony is a racing game where players will race in a colorful world inspired by My Little Pony and will take control of the car to cross the finish line first. Enjoy!!!
 
 ## Game Controls
 ### Intro    
