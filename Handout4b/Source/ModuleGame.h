@@ -45,13 +45,16 @@ public:
 	update_status Update();
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
-	void HandleCheckpointForCar(Checkpoint* checkpoint, int& currentCheckpointIndex, int& lapsCompleted, float& lapStartTime, float& bestLapTime);
+	void HandleCheckpointForCar(Checkpoint* checkpoint, int& currentCheckpointIndex, int& lapsCompleted, float& lapStartTime, float& bestLapTime, std::vector<bool>& checkpointsActive);
+	void ResetCheckpointsForCar(std::vector<bool>& checkpointsActive, int& currentCheckpointIndex);
 	void ResetCheckpoints();
 	void UpdateLapTime();
 
 public:
 
 	std::vector<Checkpoint*> checkpoints; 
+	std::vector<bool> checkpointsActiveCar1;
+	std::vector<bool> checkpointsActiveCar2;
 
 	int totalLaps = 6;
 
@@ -104,3 +107,4 @@ public:
 	MenuManager* menuManager;
 
 };
+

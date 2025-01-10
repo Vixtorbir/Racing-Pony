@@ -6,6 +6,7 @@
 #include "ModulePhysics.h"
 #include "Car.h"
 #include "Map.h" 
+#include <algorithm> 
 
 
 
@@ -44,6 +45,9 @@ bool ModuleGame::Start()
     checkpoints.push_back(new Checkpoint(App->physics->CreateRectangleSensor(750, 433, 10, 80), 1));
     checkpoints.push_back(new Checkpoint(App->physics->CreateRectangleSensor(550, 600, 10, 90), 2));
     checkpoints.push_back(new Checkpoint(App->physics->CreateRectangleSensor(235, 340, 92, 10), 3)); 
+
+    checkpointsActiveCar1 = std::vector<bool>(checkpoints.size(), false);
+    checkpointsActiveCar2 = std::vector<bool>(checkpoints.size(), false);
 
 
     bonus_fx= LoadSound("Assets/music/bonus_sfx.wav");
@@ -623,30 +627,43 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
     if (bodyA != nullptr && bodyB != nullptr)
     {
         Car* collidingCar = nullptr;
+        int* currentCheckpointIndex = nullptr;
+        int* lapsCompleted = nullptr;
+        float* lapStartTime = nullptr;
+        float* bestLapTime = nullptr;
+        std::vector<bool>* checkpointsActive = nullptr;
 
-        // Identificar qué coche está involucrado
-        if (bodyA->entity == car1) {
+        // Identificar qué coche está involucrado y asignar sus datos correspondientes
+        if (bodyA->entity == car1 || bodyB->entity == car1)
+        {
             collidingCar = car1;
+            currentCheckpointIndex = &currentCheckpointIndexCar1;
+            lapsCompleted = &lapsCompletedCar1;
+            lapStartTime = &lapStartTimeCar1;
+            bestLapTime = &bestLapTimeCar1;
+            checkpointsActive = &checkpointsActiveCar1;
         }
-        else if (bodyA->entity == car2) {
+        else if (bodyA->entity == car2 || bodyB->entity == car2)
+        {
             collidingCar = car2;
+            currentCheckpointIndex = &currentCheckpointIndexCar2;
+            lapsCompleted = &lapsCompletedCar2;
+            lapStartTime = &lapStartTimeCar2;
+            bestLapTime = &bestLapTimeCar2;
+            checkpointsActive = &checkpointsActiveCar2;
         }
 
-        if (bodyB->entity == car1) {
-            collidingCar = car1;
-        }
-        else if (bodyB->entity == car2) {
-            collidingCar = car2;
-        }
-
-        if (collidingCar != nullptr) {
-            // Aquí manejas la colisión específica del coche
-            if (bodyB->colliderType == ColliderType::NITRO) {
+        if (collidingCar != nullptr)
+        {
+            // Manejar colisión con potenciadores
+            if (bodyB->colliderType == ColliderType::NITRO)
+            {
                 Nitro* nitro = static_cast<Nitro*>(bodyB->entity);
-                if (nitro && nitro->isAvailable()) {
+                if (nitro && nitro->isAvailable())
+                {
                     nitro->OnPlayerCollision();
                     PlaySound(bonus_fx);
-                    collidingCar->ApplyBoost(15.0f); // Solo afecta al coche que colisiona
+                    collidingCar->ApplyBoost(15.0f);
 
                     b2Vec2 carPosition = collidingCar->body->body->GetPosition();
                     Vector2 position = {
@@ -657,8 +674,10 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
                 }
             }
 
-            if (bodyB->colliderType == ColliderType::OIL) {
-                if (oil && !collidingCar->oilCooldownActive) {
+            if (bodyB->colliderType == ColliderType::OIL)
+            {
+                if (oil && !collidingCar->oilCooldownActive)
+                {
                     oil->OnPlayerCollision();
                     PlaySound(oil_fx);
 
@@ -673,11 +692,13 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
                     collidingCar->spinningTimeLeft = collidingCar->spinningDuration;
 
                     b2Vec2 velocity = collidingCar->body->body->GetLinearVelocity();
-                    if (velocity.Length() > 0.0f) {
+                    if (velocity.Length() > 0.0f)
+                    {
                         collidingCar->preSpinDirection = velocity;
                         collidingCar->preSpinDirection.Normalize();
                     }
-                    else {
+                    else
+                    {
                         collidingCar->preSpinDirection.SetZero();
                     }
 
@@ -686,51 +707,50 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
                     collidingCar->oilCooldownTimeLeft = collidingCar->oilCooldownDuration;
                 }
             }
-        }
 
-        if (collidingCar != nullptr && bodyB->colliderType == ColliderType::CHECKPOINT) {
-            Checkpoint* checkpoint = static_cast<Checkpoint*>(bodyB->entity);
-            if (checkpoint) {
-                if (collidingCar == car1) {
-                    HandleCheckpointForCar(checkpoint, currentCheckpointIndexCar1, lapsCompletedCar1, lapStartTimeCar1, bestLapTimeCar1);
-                }
-                else if (collidingCar == car2) {
-                    HandleCheckpointForCar(checkpoint, currentCheckpointIndexCar2, lapsCompletedCar2, lapStartTimeCar2, bestLapTimeCar2);
+            // Manejar colisión con checkpoints
+            if (collidingCar != nullptr && bodyB->colliderType == ColliderType::CHECKPOINT)
+            {
+                Checkpoint* checkpoint = static_cast<Checkpoint*>(bodyB->entity);
+                if (checkpoint)
+                {
+                    HandleCheckpointForCar(checkpoint, *currentCheckpointIndex, *lapsCompleted, *lapStartTime, *bestLapTime, *checkpointsActive);
                 }
             }
         }
     }
 }
 
-void ModuleGame::HandleCheckpointForCar(Checkpoint* checkpoint, int& currentCheckpointIndex, int& lapsCompleted, float& lapStartTime, float& bestLapTime)
+void ModuleGame::HandleCheckpointForCar(Checkpoint* checkpoint, int& currentCheckpointIndex, int& lapsCompleted, float& lapStartTime, float& bestLapTime, std::vector<bool>& checkpointsActive)
 {
-    if (checkpoint->index == 0) {
-        // Verificar si todos los checkpoints fueron activados
-        bool allCheckpointsActive = true;
-        for (Checkpoint* cp : checkpoints) {
-            if (!cp->isActive) {
-                allCheckpointsActive = false;
-                break;
-            }
-        }
+    if (checkpoint->index == 0)
+    {
+        // Verificar si todos los checkpoints de este coche fueron activados
+        bool allCheckpointsActive = std::all_of(checkpointsActive.begin(), checkpointsActive.end(), [](bool active) { return active; });
 
-        if (allCheckpointsActive) {
+        if (allCheckpointsActive)
+        {
             // Calcular el tiempo de vuelta
             float currentLapTime = GetTime() - lapStartTime;
 
-            if (bestLapTime == 0.0f || currentLapTime < bestLapTime) {
+            if (bestLapTime == 0.0f || currentLapTime < bestLapTime)
+            {
                 bestLapTime = currentLapTime;
                 LOG("New best lap time: %.2f seconds", bestLapTime);
             }
 
             lapStartTime = GetTime();
             lapsCompleted++;
-            PlaySound(finish_line_fx); // Cambiar audio si es necesario
-            ResetCheckpoints();
+            PlaySound(finish_line_fx);
+
+            // Reiniciar solo los checkpoints de este coche
+            ResetCheckpointsForCar(checkpointsActive, currentCheckpointIndex);
+
             LOG("Lap completed! Total laps: %d", lapsCompleted);
             LOG("Current lap time: %.2f seconds", currentLapTime);
 
-            if (lapsCompleted >= totalLaps) {
+            if (lapsCompleted >= totalLaps)
+            {
                 PauseMusicStream(playingMusic);
                 PlaySound(victory_fx);
                 game_state = GameState::WIN;
@@ -738,27 +758,32 @@ void ModuleGame::HandleCheckpointForCar(Checkpoint* checkpoint, int& currentChec
             }
         }
 
-        checkpoint->isActive = true;
+        checkpointsActive[checkpoint->index] = true;
         currentCheckpointIndex = 1;
     }
-    else if (checkpoint->index == currentCheckpointIndex) {
-        checkpoint->isActive = true;
+    else if (checkpoint->index == currentCheckpointIndex)
+    {
+        checkpointsActive[checkpoint->index] = true;
         currentCheckpointIndex++;
     }
+}
+
+void ModuleGame::ResetCheckpointsForCar(std::vector<bool>& checkpointsActive, int& currentCheckpointIndex)
+{
+    std::fill(checkpointsActive.begin(), checkpointsActive.end(), false);
+    currentCheckpointIndex = 0;
 }
 
 
 void ModuleGame::ResetCheckpoints()
 {
-    currentCheckpointIndexCar1 = 0;
-    currentCheckpointIndexCar2 = 0;
-
-    for (Checkpoint* checkpoint : checkpoints) {
-        checkpoint->isActive = false;
-    }
+    ResetCheckpointsForCar(checkpointsActiveCar1, currentCheckpointIndexCar1);
+    ResetCheckpointsForCar(checkpointsActiveCar2, currentCheckpointIndexCar2);
 }
 
-void ModuleGame::UpdateLapTime() {
+
+void ModuleGame::UpdateLapTime()
+{
     currentLapTimeCar1 = GetTime() - lapStartTimeCar1;
     currentLapTimeCar2 = GetTime() - lapStartTimeCar2;
 }
