@@ -58,7 +58,11 @@ bool ModuleGame::Start()
     SetMusicVolume(playingMusic, 0.03f);
 
     ResetCheckpoints();
-    lapsCompleted = 0;
+	lapsCompletedCar1 = 0;
+    currentLapTimeCar1 = 0.0f;
+
+	lapsCompletedCar2 = 0;
+	currentLapTimeCar2 = 0.0f;
 
     ui = new UI(totalLaps);
 
@@ -113,6 +117,21 @@ bool ModuleGame::CleanUp()
 		trafficLight = nullptr;
 	}
 
+	if (menuManager != nullptr)
+	{
+		delete menuManager;
+		menuManager = nullptr;
+	}
+
+	UnloadSound(bonus_fx);
+	UnloadSound(car_fx);
+	UnloadSound(oil_fx);
+	UnloadSound(finish_line_fx);
+	UnloadSound(red_light_fx);
+	UnloadSound(victory_fx);
+
+	UnloadMusicStream(playingMusic);
+
     return true;
 }
 
@@ -120,11 +139,8 @@ bool ModuleGame::CleanUp()
 
 update_status ModuleGame::Update()
 {
-    if (IsKeyPressed(KEY_P)) {
-
-        lapsCompleted == 5;
-    }
-    if (lapsCompleted >= 1) {
+  
+	if (lapsCompletedCar1 >= totalLaps || lapsCompletedCar2 >= totalLaps){
         LOG("Juego completado");
 
 		if (car1 != nullptr)
@@ -132,7 +148,11 @@ update_status ModuleGame::Update()
 			delete car1;
 			car1 = nullptr;
 		}
-
+		if (car2 != nullptr)
+		{
+			delete car2;
+			car2 = nullptr;
+		}
         game_state = GameState::WIN;
     }
     if (IsKeyPressed(KEY_R))
@@ -170,7 +190,9 @@ update_status ModuleGame::Update()
         if (IsKeyPressed(KEY_ENTER)) {
 
             Texture2D carTexture = (selectedCharacter == 0) ? menuManager->GetCharacter1Texture() : menuManager->GetCharacter2Texture();
+			Texture2D carTexture2 = (selectedCharacter == 1) ? menuManager->GetCharacter1Texture() : menuManager->GetCharacter2Texture();
             car1 = new Car(App->physics, 400, 130, this, carTexture);
+			car2 = new Car(App->physics, 400, 100, this, carTexture2);
 
             game_state = GameState::SELECT_MAP_MENU;
         }
@@ -190,6 +212,9 @@ update_status ModuleGame::Update()
             if (car1 != nullptr) {
                 car1->SetIceMap(iceMap);
             }
+			if (car2 != nullptr) {
+				car2->SetIceMap(iceMap);
+			}
 
             game_state = GameState::SELECT_GAME_MODE;
         }
@@ -212,6 +237,9 @@ update_status ModuleGame::Update()
                 if (car1 != nullptr) {
                     car1->SetIceMap(iceMap);
                 }
+				if (car2 != nullptr) {
+					car2->SetIceMap(iceMap);
+				}
                 game_state = GameState::PLAYING;
 
             }
@@ -223,6 +251,9 @@ update_status ModuleGame::Update()
                 if (car1 != nullptr) {
                     car1->SetIceMap(iceMap);
                 }
+				if (car2 != nullptr) {
+					car2->SetIceMap(iceMap);
+				}
                 game_state = GameState::INTRO_REDGREEN;
             }
 
@@ -252,6 +283,7 @@ update_status ModuleGame::Update()
         }
 
         car1->Draw();
+		car2->Draw();
 
 
 
@@ -263,7 +295,8 @@ update_status ModuleGame::Update()
         }
         else if (!canControlCar) {
             canControlCar = true;
-            lapStartTime = GetTime();
+			lapStartTimeCar1 = GetTime();
+			lapStartTimeCar2 = GetTime();
         }
 
         if (canControlCar)
@@ -275,21 +308,24 @@ update_status ModuleGame::Update()
             oil->Draw();
             car1->Update();
             car1->Draw();
+			car2->Update();
+			car2->Draw();
 
 
             App->particleSystem->Update();
             UpdateLapTime();
-            ui->Update(currentLapTime, bestLapTime, lapsCompleted);
+            ui->Update(currentLapTimeCar1, bestLapTimeCar1, lapsCompletedCar1,
+                currentLapTimeCar2, bestLapTimeCar2, lapsCompletedCar2);
             ui->Draw();
 
 
-            if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
+            if (IsKeyDown(KEY_UP))
             {
                 car1->Accelerate();
 
             }
 
-            if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S))
+            if (IsKeyDown(KEY_DOWN))
             {
                 car1->Brake();
 
@@ -300,11 +336,11 @@ update_status ModuleGame::Update()
                 car1->Nitro();
             }
 
-            if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
+            if (IsKeyDown(KEY_LEFT))
             {
                 car1->Turn(-1, true);
             }
-            else if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
+            else if (IsKeyDown(KEY_RIGHT))
             {
                 car1->Turn(1, true);
             }
@@ -313,12 +349,34 @@ update_status ModuleGame::Update()
                 car1->Turn(0, false);
             }
 
-            if (car1->isSpinning) {
-                float progress = car1->spinningTimeLeft / car1->spinningDuration;
+			if (IsKeyDown(KEY_W))
+			{
+				car2->Accelerate();
+			}
 
-                DrawRectangle(10, 10, 200 * progress, 20, RED);
-                DrawText("Derrapando!", 10, 40, 20, WHITE);
+            if (IsKeyDown(KEY_S))
+            {
+                car2->Brake();
             }
+
+			if (IsKeyDown(KEY_A))
+			{
+				car2->Turn(-1, true);
+			}
+			else if (IsKeyDown(KEY_D))
+			{
+				car2->Turn(1, true);
+			}
+			else
+			{
+				car2->Turn(0, false);
+			}
+			if (IsKeyDown(KEY_E))
+			{
+				car2->Nitro();
+			}
+
+
         }
 
         break;
@@ -334,6 +392,7 @@ update_status ModuleGame::Update()
         }
 
         car1->Draw();
+		car2->Draw();
 
 
 
@@ -345,7 +404,8 @@ update_status ModuleGame::Update()
         }
         else if (!canControlCar) {
             canControlCar = true;
-            lapStartTime = GetTime();
+			lapStartTimeCar1 = GetTime();
+			lapStartTimeCar2 = GetTime();
         }
 
         if (canControlCar)
@@ -357,21 +417,24 @@ update_status ModuleGame::Update()
             oil->Draw();
             car1->Update();
             car1->Draw();
+			car2->Update();
+			car2->Draw();
 
 
             App->particleSystem->Update();
             UpdateLapTime();
-            ui->Update(currentLapTime, bestLapTime, lapsCompleted);
+            ui->Update(currentLapTimeCar1, bestLapTimeCar1, lapsCompletedCar1,
+                currentLapTimeCar2, bestLapTimeCar2, lapsCompletedCar2);
             ui->Draw();
 
 
-            if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
+            if (IsKeyDown(KEY_UP))
             {
                 car1->Accelerate();
 
             }
 
-            if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S))
+            if (IsKeyDown(KEY_DOWN))
             {
                 car1->Brake();
 
@@ -382,11 +445,11 @@ update_status ModuleGame::Update()
                 car1->Nitro();
             }
 
-            if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
+            if (IsKeyDown(KEY_LEFT))
             {
                 car1->Turn(-1, true);
             }
-            else if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
+            else if (IsKeyDown(KEY_RIGHT))
             {
                 car1->Turn(1, true);
             }
@@ -395,11 +458,31 @@ update_status ModuleGame::Update()
                 car1->Turn(0, false);
             }
 
-            if (car1->isSpinning) {
-                float progress = car1->spinningTimeLeft / car1->spinningDuration;
+            if (IsKeyDown(KEY_W))
+            {
+                car2->Accelerate();
+            }
 
-                DrawRectangle(10, 10, 200 * progress, 20, RED);
-                DrawText("Derrapando!", 10, 40, 20, WHITE);
+            if (IsKeyDown(KEY_S))
+            {
+                car2->Brake();
+            }
+
+            if (IsKeyDown(KEY_A))
+            {
+                car2->Turn(-1, true);
+            }
+            else if (IsKeyDown(KEY_D))
+            {
+                car2->Turn(1, true);
+            }
+            else
+            {
+                car2->Turn(0, false);
+            }
+            if (IsKeyDown(KEY_E))
+            {
+                car2->Nitro();
             }
 
             //RedLightGreenLight
@@ -472,9 +555,15 @@ update_status ModuleGame::Update()
         menuManager->DrawWinMenu();
 
         if (IsKeyPressed(KEY_LEFT_SHIFT)) {
-                lapsCompleted = 0;
-                currentLapTime = 0.0f;
-                bestLapTime = FLT_MAX;
+
+                lapsCompletedCar1 = 0;
+                currentLapTimeCar1 = 0.0f;
+                bestLapTimeCar1 = FLT_MAX;
+
+				lapsCompletedCar2 = 0;
+				currentLapTimeCar2 = 0.0f;
+				bestLapTimeCar2 = FLT_MAX;
+
                 ResetCheckpoints();
                 StopSound(victory_fx); 
                 PlayMusicStream(playingMusic);
@@ -493,9 +582,20 @@ update_status ModuleGame::Update()
                 delete car1;
                 car1 = nullptr;
             }
-            lapsCompleted = 0;
-            currentLapTime = 0.0f;
-            bestLapTime = FLT_MAX;
+			if (car2 != nullptr)
+			{
+				delete car2;
+				car2 = nullptr;
+			}
+
+            lapsCompletedCar1 = 0;
+            currentLapTimeCar1 = 0.0f;
+            bestLapTimeCar1 = FLT_MAX;
+
+			lapsCompletedCar2 = 0;
+			currentLapTimeCar2 = 0.0f;
+			bestLapTimeCar2 = FLT_MAX;
+
             ResetCheckpoints();
             StopSound(victory_fx);
             PlayMusicStream(playingMusic);
@@ -515,113 +615,145 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
     if (bodyA != nullptr && bodyB != nullptr)
     {
-        if (bodyB->colliderType == ColliderType::CHECKPOINT) {
+        Car* collidingCar = nullptr;
+
+        // Identificar qué coche está involucrado
+        if (bodyA->entity == car1) {
+            collidingCar = car1;
+        }
+        else if (bodyA->entity == car2) {
+            collidingCar = car2;
+        }
+
+        if (bodyB->entity == car1) {
+            collidingCar = car1;
+        }
+        else if (bodyB->entity == car2) {
+            collidingCar = car2;
+        }
+
+        if (collidingCar != nullptr) {
+            // Aquí manejas la colisión específica del coche
+            if (bodyB->colliderType == ColliderType::NITRO) {
+                Nitro* nitro = static_cast<Nitro*>(bodyB->entity);
+                if (nitro && nitro->isAvailable()) {
+                    nitro->OnPlayerCollision();
+                    PlaySound(bonus_fx);
+                    collidingCar->ApplyBoost(15.0f); // Solo afecta al coche que colisiona
+
+                    b2Vec2 carPosition = collidingCar->body->body->GetPosition();
+                    Vector2 position = {
+                        carPosition.x * PIXELS_PER_METER,
+                        carPosition.y * PIXELS_PER_METER
+                    };
+                    App->particleSystem->SpawnParticles(position, ParticleType::NITRO);
+                }
+            }
+
+            if (bodyB->colliderType == ColliderType::OIL) {
+                if (oil && !collidingCar->oilCooldownActive) {
+                    oil->OnPlayerCollision();
+                    PlaySound(oil_fx);
+
+                    b2Vec2 carPosition = collidingCar->body->body->GetPosition();
+                    Vector2 position = {
+                        carPosition.x * PIXELS_PER_METER,
+                        carPosition.y * PIXELS_PER_METER
+                    };
+                    App->particleSystem->SpawnParticles(position, ParticleType::SMOKE);
+
+                    collidingCar->isSpinning = true;
+                    collidingCar->spinningTimeLeft = collidingCar->spinningDuration;
+
+                    b2Vec2 velocity = collidingCar->body->body->GetLinearVelocity();
+                    if (velocity.Length() > 0.0f) {
+                        collidingCar->preSpinDirection = velocity;
+                        collidingCar->preSpinDirection.Normalize();
+                    }
+                    else {
+                        collidingCar->preSpinDirection.SetZero();
+                    }
+
+                    collidingCar->body->body->SetLinearVelocity(b2Vec2(0, 0));
+                    collidingCar->oilCooldownActive = true;
+                    collidingCar->oilCooldownTimeLeft = collidingCar->oilCooldownDuration;
+                }
+            }
+        }
+
+        if (collidingCar != nullptr && bodyB->colliderType == ColliderType::CHECKPOINT) {
             Checkpoint* checkpoint = static_cast<Checkpoint*>(bodyB->entity);
             if (checkpoint) {
-                if (checkpoint->index == 0) {
-                    bool allCheckpointsActive = true;
-                    for (Checkpoint* cp : checkpoints) {
-                        if (!cp->isActive) {
-                            allCheckpointsActive = false;
-                            break;
-                        }
-                    }
-
-                    if (allCheckpointsActive) {
-                        float currentLapTime = GetTime() - lapStartTime;
-
-                        if (bestLapTime == 0.0f || currentLapTime < bestLapTime) {
-                            bestLapTime = currentLapTime;
-                            LOG("New best lap time: %.2f seconds", bestLapTime);
-                        }
-                        lapStartTime = GetTime();
-
-                        lapsCompleted++;
-                        PlaySound(finish_line_fx); //change audio bonus
-                        ResetCheckpoints();
-                        LOG("Lap completed! Total laps: %d", lapsCompleted);
-                        LOG("Current lap time: %.2f seconds", currentLapTime);
-                        if (lapsCompleted >= totalLaps) {
-                            PauseMusicStream(playingMusic);
-                            PlaySound(victory_fx); 
-                            game_state = GameState::WIN;
-                            LOG("WIN Active");
-
-                        }
-                    }
-
-                    checkpoint->isActive = true;
-                    currentCheckpointIndex = 1;
+                if (collidingCar == car1) {
+                    HandleCheckpointForCar(checkpoint, currentCheckpointIndexCar1, lapsCompletedCar1, lapStartTimeCar1, bestLapTimeCar1);
                 }
-                else if (checkpoint->index == currentCheckpointIndex) {
-                    checkpoint->isActive = true;
-                    currentCheckpointIndex++;
+                else if (collidingCar == car2) {
+                    HandleCheckpointForCar(checkpoint, currentCheckpointIndexCar2, lapsCompletedCar2, lapStartTimeCar2, bestLapTimeCar2);
                 }
             }
         }
-
-
-        if (bodyB->colliderType == ColliderType::NITRO) {
-            Nitro* nitro = static_cast<Nitro*>(bodyB->entity);
-            if (nitro && nitro->isAvailable()) { 
-                nitro->OnPlayerCollision(); 
-                PlaySound(bonus_fx); 
-                car1->ApplyBoost(15.0f);
-
-                b2Vec2 carPosition = car1->body->body->GetPosition();
-                Vector2 position = {
-                    carPosition.x * PIXELS_PER_METER,
-                    carPosition.y * PIXELS_PER_METER
-                };
-                App->particleSystem->SpawnParticles(position, ParticleType::NITRO);
-            }
-        }
-        if (bodyB->colliderType == ColliderType::OIL) {
-            if (oil && car1 && !car1->oilCooldownActive) {
-                oil->OnPlayerCollision();
-                PlaySound(oil_fx);
-
-                b2Vec2 carPosition = car1->body->body->GetPosition();
-                Vector2 position = {
-                    carPosition.x * PIXELS_PER_METER,
-                    carPosition.y * PIXELS_PER_METER
-                };
-
-                App->particleSystem->SpawnParticles(position, ParticleType::SMOKE);
-
-                car1->isSpinning = true;
-                car1->spinningTimeLeft = car1->spinningDuration;
-
-                b2Vec2 velocity = car1->body->body->GetLinearVelocity();
-                if (velocity.Length() > 0.0f) {
-                    car1->preSpinDirection = velocity;
-                    car1->preSpinDirection.Normalize();
-                }
-                else {
-                    car1->preSpinDirection.SetZero();
-                }
-
-                car1->body->body->SetLinearVelocity(b2Vec2(0, 0));
-                car1->oilCooldownActive = true;
-                car1->oilCooldownTimeLeft = car1->oilCooldownDuration;
-            }
-        }
-
     }
 }
 
-void ModuleGame::ResetCheckpoints() {
-    
-    //añadir sonido que pasas por la meta
+void ModuleGame::HandleCheckpointForCar(Checkpoint* checkpoint, int& currentCheckpointIndex, int& lapsCompleted, float& lapStartTime, float& bestLapTime)
+{
+    if (checkpoint->index == 0) {
+        // Verificar si todos los checkpoints fueron activados
+        bool allCheckpointsActive = true;
+        for (Checkpoint* cp : checkpoints) {
+            if (!cp->isActive) {
+                allCheckpointsActive = false;
+                break;
+            }
+        }
 
-    currentCheckpointIndex = 0;
+        if (allCheckpointsActive) {
+            // Calcular el tiempo de vuelta
+            float currentLapTime = GetTime() - lapStartTime;
+
+            if (bestLapTime == 0.0f || currentLapTime < bestLapTime) {
+                bestLapTime = currentLapTime;
+                LOG("New best lap time: %.2f seconds", bestLapTime);
+            }
+
+            lapStartTime = GetTime();
+            lapsCompleted++;
+            PlaySound(finish_line_fx); // Cambiar audio si es necesario
+            ResetCheckpoints();
+            LOG("Lap completed! Total laps: %d", lapsCompleted);
+            LOG("Current lap time: %.2f seconds", currentLapTime);
+
+            if (lapsCompleted >= totalLaps) {
+                PauseMusicStream(playingMusic);
+                PlaySound(victory_fx);
+                game_state = GameState::WIN;
+                LOG("WIN Active");
+            }
+        }
+
+        checkpoint->isActive = true;
+        currentCheckpointIndex = 1;
+    }
+    else if (checkpoint->index == currentCheckpointIndex) {
+        checkpoint->isActive = true;
+        currentCheckpointIndex++;
+    }
+}
+
+
+void ModuleGame::ResetCheckpoints()
+{
+    currentCheckpointIndexCar1 = 0;
+    currentCheckpointIndexCar2 = 0;
+
     for (Checkpoint* checkpoint : checkpoints) {
         checkpoint->isActive = false;
     }
 }
 
 void ModuleGame::UpdateLapTime() {
-    currentLapTime = GetTime() - lapStartTime; 
+    currentLapTimeCar1 = GetTime() - lapStartTimeCar1;
+    currentLapTimeCar2 = GetTime() - lapStartTimeCar2;
 }
 
 

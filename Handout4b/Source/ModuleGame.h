@@ -8,7 +8,6 @@
 #include "Checkpoint.h"
 #include "UI.h"
 #include "TrafficLight.h"
-#include "AICar.h"
 #include "MenuManager.h"
 
 #include "p2Point.h"
@@ -46,25 +45,35 @@ public:
 	update_status Update();
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
+	void HandleCheckpointForCar(Checkpoint* checkpoint, int& currentCheckpointIndex, int& lapsCompleted, float& lapStartTime, float& bestLapTime);
 	void ResetCheckpoints();
 	void UpdateLapTime();
 
 public:
 
 	std::vector<Checkpoint*> checkpoints; 
-	int currentCheckpointIndex;
 
 	int totalLaps = 6;
-	int lapsCompleted = 0;
-	float lapStartTime = 0.0f;
-	float currentLapTime = 0.0f;
-	float bestLapTime = FLT_MAX;
+
+	int currentCheckpointIndexCar1 = 0;
+	int lapsCompletedCar1 = 0;
+	float lapStartTimeCar1 = 0.0f;
+	float currentLapTimeCar1 = 0.0f;
+	float bestLapTimeCar1 = FLT_MAX;
+
+	int currentCheckpointIndexCar2 = 0;
+	int lapsCompletedCar2 = 0;
+	float lapStartTimeCar2 = 0.0f;
+	float currentLapTimeCar2 = 0.0f;
+	float bestLapTimeCar2 = FLT_MAX;
+
 
 	UI* ui = nullptr;
 
 	std::vector<PhysicEntity*> entities;
 	
 	Car* car1;
+	Car* car2;
 	Nitro* nitro;
 	OilSlick* oil;
 	GameState game_state = GameState::START_MENU;
