@@ -10,7 +10,7 @@ enum WindowEvent
     WINDOW_EVENT_HIDE = 1,
     WINDOW_EVENT_SHOW = 2,
     WINDOW_EVENT_RESIZE = 3,
-    WINDOW_EVENT_COUNT       // Max window events
+    WINDOW_EVENT_COUNT       
 };
 
 class ModuleWindow : public Module

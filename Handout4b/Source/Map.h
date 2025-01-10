@@ -20,7 +20,6 @@ public:
 	
 	void CreateBorders(const std::vector<std::pair<int, int>>& points, ColliderType colliderType);
 	bool CleanUp();
-	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 
 	void SetMapTexture(Texture2D texture);
 

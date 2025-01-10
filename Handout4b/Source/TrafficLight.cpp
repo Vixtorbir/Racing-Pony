@@ -1,6 +1,7 @@
 #include "TrafficLight.h"
 #include <cmath>
-#include "raylib.h" 
+#include "raylib.h"
+
 TrafficLight::TrafficLight() : countdownTime(0), timeRemaining(0), countdownActive(false) {}
 
 TrafficLight::~TrafficLight() {
@@ -10,8 +11,8 @@ TrafficLight::~TrafficLight() {
 
 void TrafficLight::Initialize() {
  
-    beepSound = LoadSound("Assets/music/beep_sfx.wav");
-    goSound = LoadSound("Assets/music/go_sfx.wav");
+    beepSound = LoadSound("Assets/music/bonus_sfx.wav");
+    goSound = LoadSound("Assets/music/oil_sfx.wav");
 }
 
 void TrafficLight::StartCountdown(float duration) {
@@ -25,21 +26,17 @@ void TrafficLight::Update() {
         float previousTimeRemaining = timeRemaining; 
         timeRemaining -= GetFrameTime();
 
-       
         int currentDisplayTime = static_cast<int>(ceil(timeRemaining));
 
-        
         if (currentDisplayTime != lastDisplayedNumber && currentDisplayTime > 0) {
             PlaySound(beepSound);
             lastDisplayedNumber = currentDisplayTime; 
         }
 
-        
         if (timeRemaining <= 0 && previousTimeRemaining > 0) {
             PlaySound(goSound);
         }
 
-       
         if (timeRemaining <= -1.0f) {
             countdownActive = false;
         }

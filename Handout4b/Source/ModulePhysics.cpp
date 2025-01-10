@@ -156,35 +156,28 @@ PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int heig
 
 PhysBody* ModulePhysics::CreateCircleSensor(int x, int y, int radius)
 {
-	// Crear un nuevo objeto PhysBody
 	PhysBody* pbody = new PhysBody();
 
-	// Definición del cuerpo en el mundo físico
 	b2BodyDef body;
-	body.type = b2_staticBody; // Sensor estático
+	body.type = b2_staticBody; 
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 	body.userData.pointer = reinterpret_cast<uintptr_t>(pbody);
 
-	// Crear el cuerpo en el mundo físico
 	b2Body* b = world->CreateBody(&body);
 
-	// Definir la forma del sensor como un círculo
 	b2CircleShape circle;
 	circle.m_radius = PIXEL_TO_METERS(radius);
 
-	// Configurar el fixture como sensor
 	b2FixtureDef fixture;
 	fixture.shape = &circle;
 	fixture.density = 1.0f;
 	fixture.isSensor = true;
 
-	// Añadir el fixture al cuerpo
 	b->CreateFixture(&fixture);
 
-	// Configurar el objeto PhysBody
 	pbody->body = b;
-	pbody->width = radius;  // Ancho igual al radio
-	pbody->height = radius; // Alto igual al radio
+	pbody->width = radius;  
+	pbody->height = radius; 
 
 	return pbody;
 }
@@ -242,9 +235,7 @@ update_status ModulePhysics::PostUpdate()
 	b2Body* mouseSelect = nullptr;
 	Vector2 mousePosition = GetMousePosition();
 	b2Vec2 pMousePosition = b2Vec2(PIXEL_TO_METERS(mousePosition.x), PIXEL_TO_METERS(mousePosition.y));
-
-	// Bonus code: this will iterate all objects in the world and draw the circles
-	// You need to provide your own macro to translate meters to pixels
+	
 	for(b2Body* b = world->GetBodyList(); b; b = b->GetNext())
 	{
 		for(b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext())
@@ -408,7 +399,6 @@ int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& no
 	{
 		if(fixture->GetShape()->RayCast(&output, input, body->GetTransform(), 0) == true)
 		{
-			// do we want the normal ?
 
 			float fx = (float)(x2 - x1);
 			float fy = (float)(y2 - y1);
