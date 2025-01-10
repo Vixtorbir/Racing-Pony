@@ -7,7 +7,7 @@ Víctor Cárdenas Hormigo - Link to GitHub: https://github.com/vixtorbir
 
 Noa Pont Medina - Link to GitHub: https://github.com/noapont
 
-Jeremy Li - Link to GitHub: https://github.com/jeremy-zhehaoli
+Zhehao Li - Link to GitHub: https://github.com/jeremy-zhehaoli
 
 ## Description
 
