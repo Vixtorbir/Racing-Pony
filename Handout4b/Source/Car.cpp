@@ -19,7 +19,11 @@ Car::Car(ModulePhysics* physics, int _x, int _y, Module* _listener, Texture2D _t
 
 Car::~Car()
 {
-
+	if (body != nullptr) {
+		body->body->GetWorld()->DestroyBody(body->body);
+		delete body;
+		body = nullptr;
+	}
 }
 
 void Car::Update()

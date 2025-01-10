@@ -124,8 +124,15 @@ update_status ModuleGame::Update()
 
         lapsCompleted == 5;
     }
-    if (lapsCompleted >= totalLaps) {
+    if (lapsCompleted >= 1) {
         LOG("Juego completado");
+
+		if (car1 != nullptr)
+		{
+			delete car1;
+			car1 = nullptr;
+		}
+
         game_state = GameState::WIN;
     }
     if (IsKeyPressed(KEY_R))
@@ -471,15 +478,31 @@ update_status ModuleGame::Update()
                 ResetCheckpoints();
                 StopSound(victory_fx); 
                 PlayMusicStream(playingMusic);
+                trafficLight->StartCountdown(3.0f);
+                canControlCar = false;
                 game_state = GameState::SELECT_CHARACTER_MENU;
         }
         break;
     }
     if (game_state == GameState::GAME_OVER)
     {
-        
-        //PlaySound(el que sea);
 		menuManager->DrawGameOverMenu();
+        if (IsKeyPressed(KEY_LEFT_SHIFT)) {
+            if (car1 != nullptr)
+            {
+                delete car1;
+                car1 = nullptr;
+            }
+            lapsCompleted = 0;
+            currentLapTime = 0.0f;
+            bestLapTime = FLT_MAX;
+            ResetCheckpoints();
+            StopSound(victory_fx);
+            PlayMusicStream(playingMusic);
+            trafficLight->StartCountdown(3.0f);
+            canControlCar = false;
+            game_state = GameState::SELECT_CHARACTER_MENU;
+        }
 
     }
     return UPDATE_CONTINUE;
