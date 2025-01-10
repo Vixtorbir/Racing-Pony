@@ -2,15 +2,15 @@
 
 Game Link - https://github.com/Vixtorbir/Racing-Pony
 
-**GROUP MEMBERS:**
+## Developers:
 
-Marc Amo Mateu - Link to GitHub: https://github.com/mxarc
+Marc Amo Mateu (Designer, Assets & Programmer) - Link to GitHub: https://github.com/mxarc
 
-Víctor Cárdenas Hormigo - Link to GitHub: https://github.com/vixtorbir
+Víctor Cárdenas Hormigo (Leader, Main Coder & Designer) - Link to GitHub: https://github.com/vixtorbir
 
-Noa Pont Medina - Link to GitHub: https://github.com/noapont
+Noa Pont Medina (Designer, Assets & Programmer) - Link to GitHub: https://github.com/noapont
 
-Zhehao Li - Link to GitHub: https://github.com/jeremy-zhehaoli
+Zhehao Li (Artist) - Link to GitHub: https://github.com/jeremy-zhehaoli
 
 ## Description
 
@@ -38,3 +38,4 @@ Racing Pony is a racing game where players will race in a colorful world inspire
     * Q: Pause
 ## Debug Tools
     * F1: Debug Mode (Mouse joint with debug mode)
+
