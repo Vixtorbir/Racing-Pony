@@ -21,9 +21,9 @@ Racing Pony is a racing game where players will race in a colorful world inspire
     * ENTER: Select
 ### CAR 1
     * KEY_UP: Accelerate
-    * <- : Move to the left
+    * KEY_LEFT : Move to the left
     * KEY_DOWN: Brake
-    * -> : Move to the right
+    * KEY_RIGHT : Move to the right
     * SPACE: Turbo
 ### CAR 2
     * W: Accelerate
@@ -34,4 +34,4 @@ Racing Pony is a racing game where players will race in a colorful world inspire
 ### Game Screen
     * Q: Pause
 ## Debug Tools
-    * F1: Check hitboxes (Mouse joint with debug mode)
+    * F1: Debug Mode (Mouse joint with debug mode)
