@@ -12,6 +12,6 @@ public:
     void Update();
 
 private:
-    float cooldownTime = 0.0f; 
+    float cooldownTime = 0.05f; 
     float currentCooldown = 0.0f;
 };
