@@ -361,7 +361,6 @@ update_status ModuleGame::Update()
             if (IsKeyDown(KEY_UP))
             {
                 car1->Accelerate();
-
             }
 
             if (IsKeyDown(KEY_DOWN))
@@ -391,6 +390,7 @@ update_status ModuleGame::Update()
             if (IsKeyDown(KEY_W))
             {
                 car2->Accelerate();
+
             }
 
             if (IsKeyDown(KEY_S))

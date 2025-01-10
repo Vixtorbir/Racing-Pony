@@ -21,37 +21,37 @@ void UI::Update(float currentLapTimeCar1, float bestLapTimeCar1, int lapsComplet
 }
 
 void UI::Draw() {
-    // Background for UI (left block for Car 1) - higher
-    DrawRectangleRounded(Rectangle{ 5, 30, 250, 100 }, 0.2f, 10, Fade(BLACK, 0.8f)); // Higher block for Car 1
+    
+    DrawRectangleRounded(Rectangle{ 5, 30, 220, 75 }, 0.2f, 10, Fade(BLACK, 0.8f)); 
 
-    // Text for laps (Car 1) - white
-    Vector2 lapsPosition = { 12, 40 };
+   
+    Vector2 lapsPosition = { 12, 35 };
     DrawTextEx(font, TextFormat("Laps: %d / %d", lapsCompletedCar1, totalLaps), lapsPosition, 20, 0, WHITE);
 
-    // Text for current lap time (Car 1) - green
-    Vector2 currentLapPosition = { 12, 60 };
+   
+    Vector2 currentLapPosition = { 12, 59 };
     DrawTextEx(font, TextFormat("Current Lap: %.2f s", currentLapTimeCar1), currentLapPosition, 18, 0, Color{ 144, 238, 144, 255 }); // Green
 
-    // Text for best lap time (Car 1) - purple
+   
     if (bestLapTimeCar1 < FLT_MAX) {
-        Vector2 bestLapPosition = { 12, 80 };
+        Vector2 bestLapPosition = { 12,80 };
         DrawTextEx(font, TextFormat("Best Lap: %.2f s", bestLapTimeCar1), bestLapPosition, 20, 0, Color{ 218, 112, 214, 255 }); // Purple
     }
 
     // Background for UI (right block for Car 2) - moved to the bottom of the screen
-    DrawRectangleRounded(Rectangle{ 5, 620, 250, 100 }, 0.2f, 10, Fade(BLACK, 0.8f)); // Car 2 block at the bottom of the screen
+    DrawRectangleRounded(Rectangle{ 5, 630, 220, 75 }, 0.2f, 10, Fade(BLACK, 0.8f)); // Car 2 block at the bottom of the screen
 
     // Text for laps (Car 2) - white
-    Vector2 lapsPosition2 = { 12, 630 }; // Moved down to be at the bottom of the screen
+    Vector2 lapsPosition2 = { 12, 635 }; // Moved down to be at the bottom of the screen
     DrawTextEx(font, TextFormat("Laps: %d / %d", lapsCompletedCar2, totalLaps), lapsPosition2, 20, 0, WHITE);
 
     // Text for current lap time (Car 2) - green
-    Vector2 currentLapPosition2 = { 12, 650 }; // Moved down to be at the bottom of the screen
+    Vector2 currentLapPosition2 = { 12, 660 }; // Moved down to be at the bottom of the screen
     DrawTextEx(font, TextFormat("Current Lap: %.2f s", currentLapTimeCar2), currentLapPosition2, 18, 0, Color{ 144, 238, 144, 255 }); // Green
 
     // Text for best lap time (Car 2) - purple
     if (bestLapTimeCar2 < FLT_MAX) {
-        Vector2 bestLapPosition2 = { 12, 670 }; // Moved down to be at the bottom of the screen
+        Vector2 bestLapPosition2 = { 12, 681 }; // Moved down to be at the bottom of the screen
         DrawTextEx(font, TextFormat("Best Lap: %.2f s", bestLapTimeCar2), bestLapPosition2, 20, 0, Color{ 218, 112, 214, 255 }); // Purple
     }
 }
