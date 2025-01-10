@@ -82,7 +82,6 @@ public:
 	GameState game_state = GameState::START_MENU;
 
 	Sound bonus_fx;
-	Sound car_fx;
 	Sound oil_fx;
 	Sound finish_line_fx;
 	Sound red_light_fx;
