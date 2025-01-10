@@ -36,7 +36,11 @@ bool ModuleGame::Start()
 
     nitro = new Nitro(App->physics->CreateRectangleSensor(200, 300, 20, 20), LoadTexture("Assets/nitro.png"), this);
 
-    oil = new OilSlick(App->physics->CreateCircleSensor(400, 580, 15), LoadTexture("Assets/stain.png"), this);
+    oil = new OilSlick(App->physics->CreateCircleSensor(400, 590, 10), LoadTexture("Assets/stain.png"), this);
+
+    nitro2 = new Nitro(App->physics->CreateRectangleSensor(800, 290, 20, 20), LoadTexture("Assets/nitro.png"), this);
+
+    oil2 = new OilSlick(App->physics->CreateCircleSensor(700, 620, 10), LoadTexture("Assets/stain.png"), this);
 
     green_light = LoadTexture("Assets/GREENLIGHT.png");
     red_light = LoadTexture("Assets/REDLIGHT.png");
@@ -333,7 +337,10 @@ update_status ModuleGame::Update()
             App->map->Update();
             nitro->Update();
             nitro->Draw();
+			nitro2->Update();
+			nitro2->Draw();
             oil->Draw();
+			oil2->Draw();
             car1->Update();
             car1->Draw();
             car2->Update();
@@ -350,7 +357,6 @@ update_status ModuleGame::Update()
             if (IsKeyDown(KEY_UP))
             {
                 car1->Accelerate();
-
             }
 
             if (IsKeyDown(KEY_DOWN))
@@ -380,6 +386,7 @@ update_status ModuleGame::Update()
             if (IsKeyDown(KEY_W))
             {
                 car2->Accelerate();
+
             }
 
             if (IsKeyDown(KEY_S))
@@ -442,7 +449,10 @@ update_status ModuleGame::Update()
             App->map->Update();
             nitro->Update();
             nitro->Draw();
+			nitro2->Update();
+			nitro2->Draw();
             oil->Draw();
+			oil2->Draw();
             car1->Update();
             car1->Draw();
             car2->Update();

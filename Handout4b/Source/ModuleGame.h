@@ -76,7 +76,9 @@ public:
 	Car* car1;
 	Car* car2;
 	Nitro* nitro;
+	Nitro* nitro2;
 	OilSlick* oil;
+	OilSlick* oil2;
 	GameState game_state = GameState::START_MENU;
 
 	Sound bonus_fx;
