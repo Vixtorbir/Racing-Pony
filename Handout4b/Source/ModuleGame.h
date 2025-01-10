@@ -73,8 +73,6 @@ public:
 
 	UI* ui = nullptr;
 
-	std::vector<PhysicEntity*> entities;
-
 	Car* car1;
 	Car* car2;
 	Nitro* nitro;

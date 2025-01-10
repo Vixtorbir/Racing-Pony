@@ -1,6 +1,5 @@
 #include "Boost.h"
 #include "Application.h"
-#include <iostream>
 
 Nitro::Nitro(PhysBody* body, Texture2D texture, Module* listener)
     : MapItem(body, texture, listener) {
@@ -12,7 +11,6 @@ Nitro::~Nitro() {}
 
 void Nitro::OnPlayerCollision() {
     if (currentCooldown <= 0.0f) {
-        std::cout << "Nitro activated!" << std::endl;
         currentCooldown = cooldownTime; 
     }
 }

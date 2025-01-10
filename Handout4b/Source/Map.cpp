@@ -114,12 +114,6 @@ bool ArePointsTooClose(const std::pair<int, int>& p1, const std::pair<int, int>&
     float dy = (float)(p2.second - p1.second);
     bool tooClose = (dx * dx + dy * dy) < (threshold * threshold);
 
-    if (tooClose)
-    {
-        std::cout << "Points too close: (" << p1.first << ", " << p1.second
-            << ") and (" << p2.first << ", " << p2.second << ")\n";
-    }
-
     return tooClose;
 }
 
@@ -133,8 +127,6 @@ void Map::CreateBorders(const std::vector<std::pair<int, int>>& points, Collider
         chainPoints.push_back(point.first);
         chainPoints.push_back(point.second);
     }
-
-    std::cout << "Creating border with " << chainPoints.size() / 2 << " points.\n";
 
     if (chainPoints.size() >= 4)
     {
@@ -183,21 +175,6 @@ bool Map::CleanUp()
     mapBorders.clear();
 
     return true;
-}
-
-void Map::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
-{
-	if (bodyA != nullptr && bodyB != nullptr)
-	{
-		if (bodyA->colliderType == ColliderType::CAR && bodyB->colliderType == ColliderType::WALL)
-		{
-			std::cout << "Collision with wall detected.\n";
-		}
-		else if (bodyA->colliderType == ColliderType::WALL && bodyB->colliderType == ColliderType::CAR)
-		{
-			std::cout << "Collision with wall detected.\n";
-		}
-	}
 }
 
 void Map::SetMapTexture(Texture2D texture)

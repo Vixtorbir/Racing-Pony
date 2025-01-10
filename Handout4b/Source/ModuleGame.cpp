@@ -19,7 +19,7 @@ ModuleGame::ModuleGame(Application* app, bool start_enabled) : Module(app, start
 ModuleGame::~ModuleGame()
 {}
 
-// Load assets
+
 bool ModuleGame::Start()
 {
     LOG("Loading Game assets");
@@ -74,7 +74,6 @@ bool ModuleGame::Start()
     trafficLight->Initialize();
     trafficLight->StartCountdown(3.0f);
     canControlCar = false;
-
 
 
     return ret;
@@ -145,7 +144,6 @@ update_status ModuleGame::Update()
 {
 
     if (lapsCompletedCar1 >= totalLaps || lapsCompletedCar2 >= totalLaps) {
-        LOG("Juego completado");
 
         if (car1 != nullptr)
         {
@@ -170,17 +168,13 @@ update_status ModuleGame::Update()
 
     switch (game_state) {
 
-
     case GameState::START_MENU:
 
         menuManager->DrawMainMenu();
 
         if (IsKeyPressed(KEY_ENTER))
         {
-
             game_state = GameState::SELECT_CHARACTER_MENU;
-
-
         }
         break;
 
@@ -195,7 +189,6 @@ update_status ModuleGame::Update()
             Texture2D carTexture;
             Texture2D carTexture2;
 
-            // Selección de carTexture basado en selectedCharacter
             switch (selectedCharacter) {
             case 0:
                 carTexture = menuManager->GetCharacter1Texture();
@@ -520,31 +513,27 @@ update_status ModuleGame::Update()
                 car2->Nitro();
             }
 
-            //RedLightGreenLight
 
             static bool isRedLight = false;
-            static bool initialSoundPlayed = false; // Tracks if the initial sound has been played
+            static bool initialSoundPlayed = false; 
             static float lastToggleTime = GetTime();
             const float toggleInterval = 5.0f;
 
-            // Ensure the initial green light sound plays once
             if (!isRedLight && !initialSoundPlayed) {
-                PlaySound(red_light_fx); // Replace with your green light sound
+                PlaySound(red_light_fx); 
                 initialSoundPlayed = true;
             }
 
-            // Toggle traffic light based on time
             if (GetTime() - lastToggleTime >= toggleInterval) {
-                isRedLight = !isRedLight; // Switch light state
+                isRedLight = !isRedLight; 
                 lastToggleTime = GetTime();
 
                 if (!isRedLight) {
-                    PlaySound(red_light_fx); // Replace with your red light sound
+                    PlaySound(red_light_fx); 
                 }
 
             }
 
-            // Display traffic light status
             if (isRedLight) {
                 DrawTexture(red_light, 0, 0, WHITE);
             }
@@ -552,14 +541,12 @@ update_status ModuleGame::Update()
                 DrawTexture(green_light, 0, 0, WHITE);
             }
 
-            // Movement detection during red light
             if (isRedLight) {
                 if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W) ||
                     IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S) ||
                     IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A) ||
                     IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D) ||
                     IsKeyDown(KEY_SPACE)) {
-                    // Penalize the player for moving during red light
                     game_state = GameState::GAME_OVER;
                 }
             }
@@ -576,7 +563,6 @@ update_status ModuleGame::Update()
 
         if (IsKeyPressed(KEY_ENTER) && redGreen == false) {
 
-            //PlaySound(el que sea);
             game_state = GameState::PLAYING;
 
             PlayMusicStream(playingMusic);
@@ -664,7 +650,6 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
         float* bestLapTime = nullptr;
         std::vector<bool>* checkpointsActive = nullptr;
 
-        // Identificar qué coche está involucrado y asignar sus datos correspondientes
         if (bodyA->entity == car1 || bodyB->entity == car1)
         {
             collidingCar = car1;
@@ -686,7 +671,6 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
         if (collidingCar != nullptr)
         {
-            // Manejar colisión con potenciadores
             if (bodyB->colliderType == ColliderType::NITRO)
             {
                 Nitro* nitro = static_cast<Nitro*>(bodyB->entity);
@@ -739,7 +723,6 @@ void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
                 }
             }
 
-            // Manejar colisión con checkpoints
             if (collidingCar != nullptr && bodyB->colliderType == ColliderType::CHECKPOINT)
             {
                 Checkpoint* checkpoint = static_cast<Checkpoint*>(bodyB->entity);
@@ -756,12 +739,10 @@ void ModuleGame::HandleCheckpointForCar(Checkpoint* checkpoint, int& currentChec
 {
     if (checkpoint->index == 0)
     {
-        // Verificar si todos los checkpoints de este coche fueron activados
         bool allCheckpointsActive = std::all_of(checkpointsActive.begin(), checkpointsActive.end(), [](bool active) { return active; });
 
         if (allCheckpointsActive)
         {
-            // Calcular el tiempo de vuelta
             float currentLapTime = GetTime() - lapStartTime;
 
             if (bestLapTime == 0.0f || currentLapTime < bestLapTime)
@@ -774,7 +755,6 @@ void ModuleGame::HandleCheckpointForCar(Checkpoint* checkpoint, int& currentChec
             lapsCompleted++;
             PlaySound(finish_line_fx);
 
-            // Reiniciar solo los checkpoints de este coche
             ResetCheckpointsForCar(checkpointsActive, currentCheckpointIndex);
 
             LOG("Lap completed! Total laps: %d", lapsCompleted);
