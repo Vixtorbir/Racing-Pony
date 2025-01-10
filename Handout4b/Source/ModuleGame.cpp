@@ -194,6 +194,8 @@ update_status ModuleGame::Update()
         if (IsKeyPressed(KEY_ENTER)) {
             Texture2D carTexture;
             Texture2D carTexture2;
+
+            // Selección de carTexture basado en selectedCharacter
             switch (selectedCharacter) {
             case 0:
                 carTexture = menuManager->GetCharacter1Texture();
@@ -212,24 +214,18 @@ update_status ModuleGame::Update()
                 break;
             }
 
-                switch (selectedCharacter) {
-                case 0:
-                    carTexture2 = menuManager->GetCharacter1Texture();
-                    break;
-                case 1:
-                    carTexture2 = menuManager->GetCharacter2Texture();
-                    break;
-                case 2:
-                    carTexture2 = menuManager->GetCharacter3Texture();
-                    break;
-                case 3:
-                    carTexture2 = menuManager->GetCharacter4Texture();
-                    break;
-                case 4:
-                    carTexture2 = menuManager->GetCharacter5Texture();
-                    break;
+            int randomIndex;
+            do {
+                randomIndex = GetRandomValue(0, 4);  
+                switch (randomIndex) {
+                case 0: carTexture2 = menuManager->GetCharacter1Texture(); break;
+                case 1: carTexture2 = menuManager->GetCharacter2Texture(); break;
+                case 2: carTexture2 = menuManager->GetCharacter3Texture(); break;
+                case 3: carTexture2 = menuManager->GetCharacter4Texture(); break;
+                case 4: carTexture2 = menuManager->GetCharacter5Texture(); break;
                 }
-           
+            } while (carTexture2.id == carTexture.id);  
+
             car1 = new Car(App->physics, 400, 130, this, carTexture);
             car2 = new Car(App->physics, 400, 100, this, carTexture2);
 
