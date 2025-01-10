@@ -46,7 +46,7 @@ public:
 
     bool oilCooldownActive;
     float oilCooldownTimeLeft;
-    const float oilCooldownDuration = 5.0f;
+    const float oilCooldownDuration = 3.5f;
 
     bool iceMap;
 };
