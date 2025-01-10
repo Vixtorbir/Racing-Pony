@@ -7,6 +7,9 @@ Car::Car(ModulePhysics* physics, int _x, int _y, Module* _listener, Texture2D _t
     body->colliderType = ColliderType::CAR;
     listener = _listener;
 	texture = _texture;
+
+    body->entity = this;
+
     nitroActive = false;
     nitroTimeLeft = 0.0f;
     nitroCooldownTimeLeft = 0.0f;

@@ -52,9 +52,6 @@
     <ClCompile Include="Source\TrafficLight.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="Source\AICar.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="Source\MenuManager.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
@@ -118,9 +115,6 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Source\TrafficLight.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\AICar.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Source\MenuManager.h">

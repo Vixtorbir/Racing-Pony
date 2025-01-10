@@ -7,13 +7,19 @@ public:
     UI(int totalLaps);
     ~UI();
 
-    void Update(float currentLapTime, float bestLapTime, int lapsCompleted);
+	void Update(float currentLapTimeCar1, float bestLapTimeCar1, int lapsCompletedCar1, float currentLapTimeCar2, float bestLapTimeCar2, int lapsCompletedCar2);
     void Draw();
 
 private:
-    float currentLapTime;
-    float bestLapTime;
-    int lapsCompleted;
+   
+	float currentLapTimeCar1;
+	float bestLapTimeCar1;
+	int lapsCompletedCar1;
+
+	float currentLapTimeCar2;
+	float bestLapTimeCar2;
+	int lapsCompletedCar2;
+
     int totalLaps;
 	Font font;
 };
