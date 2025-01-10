@@ -99,6 +99,7 @@ public:
 	int selectedMap = 0;    
 	int selectedMode = 0;
 	bool iceMap = false;
+	bool redGreen = false;
 
 	MenuManager* menuManager;
 
