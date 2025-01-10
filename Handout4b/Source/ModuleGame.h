@@ -52,7 +52,7 @@ public:
 
 public:
 
-	std::vector<Checkpoint*> checkpoints; 
+	std::vector<Checkpoint*> checkpoints;
 	std::vector<bool> checkpointsActiveCar1;
 	std::vector<bool> checkpointsActiveCar2;
 
@@ -74,7 +74,7 @@ public:
 	UI* ui = nullptr;
 
 	std::vector<PhysicEntity*> entities;
-	
+
 	Car* car1;
 	Car* car2;
 	Nitro* nitro;
@@ -99,7 +99,7 @@ public:
 	bool canControlCar;
 
 	int selectedCharacter = 0;
-	int selectedMap = 0;    
+	int selectedMap = 0;
 	int selectedMode = 0;
 	bool iceMap = false;
 	bool redGreen = false;
@@ -107,4 +107,3 @@ public:
 	MenuManager* menuManager;
 
 };
-
