@@ -57,7 +57,7 @@ bool ModuleGame::Start()
     bonus_fx = LoadSound("Assets/music/bonus_sfx.wav");
     car_fx = LoadSound("Assets/music/car_sfx.wav");
     oil_fx = LoadSound("Assets/music/oil_sfx.wav");
-    finish_line_fx = LoadSound("Assets/music/bonus_sfx.wav");
+    finish_line_fx = LoadSound("Assets/music/finish_sfx.wav");
     red_light_fx = LoadSound("Assets/music/REDLIGHT.wav");
     victory_fx = LoadSound("Assets/music/victory.wav");
 

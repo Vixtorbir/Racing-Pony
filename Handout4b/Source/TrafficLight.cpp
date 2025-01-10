@@ -11,8 +11,8 @@ TrafficLight::~TrafficLight() {
 
 void TrafficLight::Initialize() {
  
-    beepSound = LoadSound("Assets/music/bonus_sfx.wav");
-    goSound = LoadSound("Assets/music/oil_sfx.wav");
+    beepSound = LoadSound("Assets/music/beep_sfx.wav");
+    goSound = LoadSound("Assets/music/go_sfx.wav");
 }
 
 void TrafficLight::StartCountdown(float duration) {

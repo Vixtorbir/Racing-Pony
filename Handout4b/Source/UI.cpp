@@ -22,14 +22,14 @@ void UI::Update(float currentLapTimeCar1, float bestLapTimeCar1, int lapsComplet
 
 void UI::Draw() {
     
-    DrawRectangleRounded(Rectangle{ 5, 30, 250, 100 }, 0.2f, 10, Fade(BLACK, 0.8f)); 
+    DrawRectangleRounded(Rectangle{ 5, 30, 220, 75 }, 0.2f, 10, Fade(BLACK, 0.8f));
 
     
-    Vector2 lapsPosition = { 12, 40 };
+    Vector2 lapsPosition = { 12, 35 };
     DrawTextEx(font, TextFormat("Laps: %d / %d", lapsCompletedCar1, totalLaps), lapsPosition, 20, 0, WHITE);
 
     
-    Vector2 currentLapPosition = { 12, 60 };
+    Vector2 currentLapPosition = { 12, 59 };
     DrawTextEx(font, TextFormat("Current Lap: %.2f s", currentLapTimeCar1), currentLapPosition, 18, 0, Color{ 144, 238, 144, 255 }); 
 
     
@@ -39,18 +39,18 @@ void UI::Draw() {
     }
 
     
-    DrawRectangleRounded(Rectangle{ 5, 620, 250, 100 }, 0.2f, 10, Fade(BLACK, 0.8f));
+    DrawRectangleRounded(Rectangle{ 5, 630, 220, 75 }, 0.2f, 10, Fade(BLACK, 0.8f));
 
     
-    Vector2 lapsPosition2 = { 12, 630 }; 
+    Vector2 lapsPosition2 = { 12, 635 }; 
     DrawTextEx(font, TextFormat("Laps: %d / %d", lapsCompletedCar2, totalLaps), lapsPosition2, 20, 0, WHITE);
 
     
-    Vector2 currentLapPosition2 = { 12, 650 }; 
+    Vector2 currentLapPosition2 = { 12, 660 }; 
     DrawTextEx(font, TextFormat("Current Lap: %.2f s", currentLapTimeCar2), currentLapPosition2, 18, 0, Color{ 144, 238, 144, 255 }); 
 
     if (bestLapTimeCar2 < FLT_MAX) {
-        Vector2 bestLapPosition2 = { 12, 670 }; 
+        Vector2 bestLapPosition2 = { 12, 681 }; 
         DrawTextEx(font, TextFormat("Best Lap: %.2f s", bestLapTimeCar2), bestLapPosition2, 20, 0, Color{ 218, 112, 214, 255 });
     }
 }
