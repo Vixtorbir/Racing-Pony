@@ -27,6 +27,12 @@ public:
 
 	Texture2D GetCharacter2Texture() const;
 
+	Texture2D GetCharacter3Texture() const;
+
+	Texture2D GetCharacter4Texture() const;
+
+	Texture2D GetCharacter5Texture() const;
+
 	Texture2D GetMap1Full() const;
 
 	Texture2D GetMap2Full() const;
@@ -51,4 +57,7 @@ public:
 
 	Texture2D character1Texture;
 	Texture2D character2Texture;
+	Texture2D character3Texture;
+	Texture2D character4Texture;
+	Texture2D character5Texture;
 };

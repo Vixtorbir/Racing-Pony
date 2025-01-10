@@ -164,12 +164,29 @@ update_status ModuleGame::Update()
 
         menuManager->DrawCharacterSelectMenu(selectedCharacter);
 
-        if (IsKeyPressed(KEY_RIGHT)) selectedCharacter = 1;
-        if (IsKeyPressed(KEY_LEFT)) selectedCharacter = 0;
+          if (IsKeyPressed(KEY_RIGHT)) selectedCharacter = (selectedCharacter + 1) % 5;
+          if (IsKeyPressed(KEY_LEFT)) selectedCharacter = (selectedCharacter - 1 + 5) % 5;
 
         if (IsKeyPressed(KEY_ENTER)) {
 
-            Texture2D carTexture = (selectedCharacter == 0) ? menuManager->GetCharacter1Texture() : menuManager->GetCharacter2Texture();
+            Texture2D carTexture;
+            switch (selectedCharacter) {
+            case 0:
+                carTexture = menuManager->GetCharacter1Texture();
+                break;
+            case 1:
+                carTexture = menuManager->GetCharacter2Texture();
+                break;
+            case 2:
+                carTexture = menuManager->GetCharacter3Texture();
+                break;
+            case 3:
+                carTexture = menuManager->GetCharacter4Texture();
+                break;
+            case 4:
+                carTexture = menuManager->GetCharacter5Texture();
+                break;
+            }
             car1 = new Car(App->physics, 400, 130, this, carTexture);
 
             game_state = GameState::SELECT_MAP_MENU;

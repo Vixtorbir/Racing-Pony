@@ -9,6 +9,9 @@ MenuManager::MenuManager() {
     map2Preview = { 0 };
     character1Texture = { 0 };
     character2Texture = { 0 };
+    character3Texture = { 0 };
+    character4Texture = { 0 };
+    character5Texture = { 0 };
 }
 
 MenuManager::~MenuManager() {
@@ -32,6 +35,9 @@ void MenuManager::LoadAssets() {
 
     character1Texture = LoadTexture("Assets/Car.png");
     character2Texture = LoadTexture("Assets/Car2.png");
+    character3Texture = LoadTexture("Assets/Car3.png");
+    character4Texture = LoadTexture("Assets/Car4.png");
+    character5Texture = LoadTexture("Assets/Car5.png");
 
     NormalMode = LoadTexture("Assets/normalmode.png");
     GreenRedMode = LoadTexture("Assets/greenredmode.png");
@@ -43,16 +49,22 @@ void MenuManager::DrawMainMenu() {
 
 void MenuManager::DrawCharacterSelectMenu(int selectedCharacter) {
 
-    DrawTexture(character1Texture, GetScreenWidth() / 2 - 200, GetScreenHeight() / 2 - character1Texture.height / 2, WHITE);
-    DrawTexture(character2Texture, GetScreenWidth() / 2 + 100, GetScreenHeight() / 2 - character2Texture.height / 2, WHITE);
+   
+    const int startX = GetScreenWidth() / 2 - 300;
+    const int startY = GetScreenHeight() / 2 - character1Texture.height / 2;
+    const int offsetX = 150; 
 
-    if (selectedCharacter == 0) {
-        DrawRectangleLines(GetScreenWidth() / 2 - 210, GetScreenHeight() / 2 - character1Texture.height / 2 - 10,
-            character1Texture.width + 20, character1Texture.height + 20, YELLOW);
-    }
-    else {
-        DrawRectangleLines(GetScreenWidth() / 2 + 90, GetScreenHeight() / 2 - character2Texture.height / 2 - 10,
-            character2Texture.width + 20, character2Texture.height + 20, YELLOW);
+   
+    DrawTexture(character1Texture, startX, startY, WHITE);
+    DrawTexture(character2Texture, startX + offsetX, startY, WHITE);
+    DrawTexture(character3Texture, startX + 2 * offsetX, startY, WHITE);
+    DrawTexture(character4Texture, startX + 3 * offsetX, startY, WHITE);
+    DrawTexture(character5Texture, startX + 4 * offsetX, startY, WHITE);
+
+   
+    if (selectedCharacter >= 0 && selectedCharacter < 5) {
+        int highlightX = startX + selectedCharacter * offsetX;
+        DrawRectangleLines(highlightX - 10, startY - 10, character1Texture.width + 20, character1Texture.height + 20, YELLOW);
     }
 }
 
@@ -136,6 +148,9 @@ void MenuManager::CleanUp() {
     UnloadTexture(map2Full);
     UnloadTexture(character1Texture);
     UnloadTexture(character2Texture);
+    UnloadTexture(character3Texture);
+    UnloadTexture(character4Texture);
+    UnloadTexture(character5Texture);
 }
 
 Texture2D MenuManager::GetCharacter1Texture() const
@@ -146,6 +161,21 @@ Texture2D MenuManager::GetCharacter1Texture() const
 Texture2D MenuManager::GetCharacter2Texture() const
 {
     return character2Texture;
+}
+
+Texture2D MenuManager::GetCharacter3Texture() const
+{
+    return character3Texture;
+}
+
+Texture2D MenuManager::GetCharacter4Texture() const
+{
+    return character4Texture;
+}
+
+Texture2D MenuManager::GetCharacter5Texture() const
+{
+    return character5Texture;
 }
 
 Texture2D MenuManager::GetMap1Full() const
