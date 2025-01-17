@@ -10,7 +10,7 @@ Víctor Cárdenas Hormigo (Leader, Main Coder & Designer) - Link to GitHub: http
 
 Noa Pont Medina (Designer, Assets & Programmer) - Link to GitHub: https://github.com/noapont
 
-Zhehao Li (Artist) - Link to GitHub: https://github.com/jeremy-zhehaoli
+Zhehao Li (Artist, Music & Programmer) - Link to GitHub: https://github.com/jeremy-zhehaoli
 
 ## Description
 
